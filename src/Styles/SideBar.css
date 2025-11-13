@@ -5,7 +5,7 @@
   border-right: 1px solid #ddd;
   overflow-y: auto;
   transition: all 0.3s ease;
- 
+  border-radius: 30px;
  
   
 }

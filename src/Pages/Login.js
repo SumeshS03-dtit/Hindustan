@@ -7,9 +7,7 @@ import { Switch } from "antd";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Flex, Input, Typography } from "antd";
-import type { GetProps } from "antd";
-
-import BaseUrl from "../Pages/BaseUrl";
+import { GetProps } from "antd";
 
 const { Title } = Typography;
 type OTPProps = GetProps<typeof Input.OTP>;
@@ -21,6 +19,7 @@ const Login = () => {
   const [error, setError] = useState("");
 
   const navigate = useNavigate();
+  const baseurl = process.env.REACT_APP_API_BASE_URL;
 
   const handleMobileSubmit = async () => {
     if (mobileNumber.length !== 10) {
@@ -31,7 +30,7 @@ const Login = () => {
     setError("");
 
     try {
-      const res = await fetch(`${BaseUrl}/teacher/login`, {
+      const res = await fetch(`${baseurl}/teacher/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -57,7 +56,7 @@ const Login = () => {
 
   const handleOtpVerify = async () => {
     try {
-      const res = await fetch(`${BaseUrl}/teacher/verify-otp`, {
+      const res = await fetch(`${baseurl}/teacher/verify-otp`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -72,7 +71,12 @@ const Login = () => {
       console.log("Teacher Data:", data.data);
 
       if (data.message === "Login successful") {
-        localStorage.setItem("token", data.token);
+          // Save token
+        localStorage.setItem("Teachertoken", data.token);
+
+          // Save teacher details
+        localStorage.setItem("TeacherData", JSON.stringify(data.data));
+
         navigate("/analytics");
       } else {
         alert("Invalid OTP");

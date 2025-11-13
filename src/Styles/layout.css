@@ -3,12 +3,13 @@
   overflow: hidden;
 }
 .sidebar-col {
-  background-color: white;
+  background-color: #f8f9fa;
   transition: all 0.3s ease;
   height: 100vh;
-  border-right: 1px solid #ddd;
+  /* border-right: 1px solid #ddd; */
   overflow-y: auto;
   z-index: 1000;
+  /* border-radius: 20px; */
 }
 .main-content-col {
   height: 100vh;
@@ -16,7 +17,7 @@
   position: relative;
 }
 .main-content-wrapper {
-  padding: 20px;
+  /* padding: 20px; */
   min-height: 100%;
   overflow-x: hidden;
 }

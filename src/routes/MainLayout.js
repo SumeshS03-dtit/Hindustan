@@ -12,14 +12,15 @@ const MainLayout = () => {
     <Container fluid className="p-0 layout-container">
       <Row className="g-0 flex-nowrap">
         <Col
-          xs={isOpen ? 8 : 0}
-          md={isOpen ? 2 : 0}
-          className={`sidebar-col ${isOpen ? "open" : "closed"}`}
-        >
-          <SideBar />
-        </Col>
+  xs={isOpen ? 8 : 0}
+  md={isOpen ? 6 : 0}
+  lg={isOpen ? 2: 0}
+  className={`sidebar-col ${isOpen ? "open" : "closed"} p-2 `}
+>
+  <SideBar />
+</Col>
 
-        <Col xs={12} md={isOpen ? 10 : 12} className="main-content-col">
+        <Col xs={12}  className="main-content-col col-lg-10">
           <div className="main-header position-relative">
             <Button
               variant="light"
