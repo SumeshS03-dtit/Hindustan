@@ -15,6 +15,36 @@
   background-color: #fff;
 }
 
+.ai-text {
+  white-space: nowrap;      /* keep text in one line */
+  overflow: hidden;         /* hide extra text */
+  text-overflow: ellipsis;  /* show ... */
+  max-width: 120px;         /* adjust width as needed */
+  display: block;           /* required for ellipsis */
+}
+
+.ai-btn {
+  cursor: pointer;
+  transition: all 0.3s ease; /* smooth animation */
+}
+
+/* Hover Effect */
+.ai-btn:hover {
+  transform: translateY(-3px);  /* button moves up */
+          /* increases width slightly */
+  box-shadow: 0 4px 10px rgba(0, 0, 255, 0.15); /* optional glow */
+}
+
+.ai-btn:hover {
+  transform: translateY(-3px);
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.ai-btn:hover {
+  transform: scale(1.05);
+}
+
 @media (max-width: 768px) {
   .monthlyherald_main_content {
     padding: 70px 15px 15px; 

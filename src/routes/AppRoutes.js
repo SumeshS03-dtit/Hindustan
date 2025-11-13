@@ -6,19 +6,30 @@ import MainLayout from "../routes/MainLayout";
 import DailyLog from "../Pages/Daily_Logs";
 import MonthlyHerald from "../Pages/MonthlyHerald";
 import MyClasses from "../Pages/MyClasses";
+import MonthlyPlans from "../Pages/MonthlyPlans";
+import ProtectedRoute from "./ProtectedRoute";
 
 const AppRoutes = () => {
   return (
     <Routes>
-      
+
+      {/* Public Route */}
       <Route path="/" element={<Login />} />
 
-      <Route element={<MainLayout />}>
+      {/* Protected Routes */}
+      <Route
+        element={
+          <ProtectedRoute>
+            <MainLayout />
+          </ProtectedRoute>
+        }
+      >
         <Route path="dashboard" element={<DashBoard />} />
         <Route path="analytics" element={<Analytics />} />
         <Route path="dailylog" element={<DailyLog />} />
         <Route path="monthlyherald" element={<MonthlyHerald />} />
         <Route path="myclasses" element={<MyClasses />} />
+        <Route path="monthlyplan/:id" element={<MonthlyPlans></MonthlyPlans>}></Route>
       </Route>
 
     </Routes>

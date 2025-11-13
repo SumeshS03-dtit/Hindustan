@@ -1,148 +1,52 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Row, Col, Button, Form, Pagination } from "react-bootstrap";
 import "../Styles/MonthlyHerald.css";
 import { FaPencilAlt } from "react-icons/fa";
 import { SlCalender } from "react-icons/sl";
 import { FaBell } from "react-icons/fa6";
 import ailogo from "../assets/HIS/images/AI LOGO 3.png"
-
+import {getMonthlyHerald} from '../Services/monthlyherald'
+import AiSuggestionModal from "../Components/AiSuggestionModal";
 
 const MonthlyHerald = () => {
   const [search, setSearch] = useState("");
+  const [showAISuggestion, setShowAISuggestion] = useState(false);
+  const [selectedId, setSelectedId] = useState(null);
+  const navigate = useNavigate();
+  const [heraldData, setHeraldData] = useState([]);
 
-  const cards = [
-    {
-      date: "Nov 12",
-      time: "9:00 AM",
-      period: "1 - Period",
-      chapter: "U6: Let's Perform",
-      topic: "6.1 What Nonsense",
-      status: "Upcoming",
-    },
-    {
-      date: "Nov 11",
-      time: "03:00 PM",
-      period: "3 - Period",
-      chapter: "U6: Let's Perform",
-      topic: "6.2 From Story to Play",
-      status: "Upcoming",
-    },
-    {
-      date: "Nov 10",
-      time: "9:00 AM",
-      period: "1 - Period",
-      chapter: "U6: Let's Perform",
-      topic: "6.3 More Powerful Language",
-      status: "Pending",
-    },
-    {
-      date: "Nov",
-      time: "9:00 AM",
-      period: "1 - Period",
-      chapter: "U6: Let's Perform",
-      topic: "6.3 More Powerful Language",
-      status: "Completed",
-    },
-    {
-      date: "Oct 15",
-      time: "12:00 PM",
-      period: "4 - Period",
-      chapter: "U3: My World",
-      topic: "Describing surroundings",
-      status: "Complete",
-    },
-    {
-      date: "Oct 28",
-      time: "2:00 PM",
-      period: "3 - Period",
-      chapter: "U5: Story Time",
-      topic: "Where the story takes place",
-      status: "Complete",
-    },
-    {
-      date: "Oct 20",
-      time: "1:00 PM",
-      period: "2 - Period",
-      chapter: "U4: Numbers Around",
-      topic: "Understanding place value",
-      status: "Pending",
-    },
-    {
-      date: "Nov 04",
-      time: "2:00 PM",
-      period: "5 - Period",
-      chapter: "U5: Story Time",
-      topic: "Where the story takes place",
-      status: "Complete",
-    },
-    {
-      date: "Oct 29",
-      time: "2:00 PM",
-      period: "3 - Period",
-      chapter: "U5: Story Time",
-      topic: "The central struggle",
-      status: "Complete",
-    },
-    {
-  date: "Nov 09",
-  time: "11:00 AM",
-  period: "2 - Period",
-  chapter: "U6: Let's Perform",
-  topic: "6.4 Create Characters",
-  status: "Upcoming",
-},
-{
-  date: "Nov 08",
-  time: "02:00 PM",
-  period: "4 - Period",
-  chapter: "U6: Let's Perform",
-  topic: "6.5 Practice Dialogue Reading",
-  status: "Pending",
-},
-{
-  date: "Nov 07",
-  time: "9:00 AM",
-  period: "1 - Period",
-  chapter: "U6: Let's Perform",
-  topic: "6.6 Group Performance Prep",
-  status: "Completed",
-},
-{
-  date: "Nov 06",
-  time: "3:00 PM",
-  period: "5 - Period",
-  chapter: "U5: Story Time",
-  topic: "5.4 Story Summary Writing",
-  status: "Complete",
-},
-{
-  date: "Nov 05",
-  time: "2:00 PM",
-  period: "4 - Period",
-  chapter: "U5: Story Time",
-  topic: "5.5 Character Analysis",
-  status: "Upcoming",
-},
-{
-  date: "Nov 03",
-  time: "12:00 PM",
-  period: "3 - Period",
-  chapter: "U5: Story Time",
-  topic: "5.6 Theme Exploration",
-  status: "Pending",
-},
-  ];
+  useEffect(() => {
+    fetchHeraldData();
+  }, []);
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 9;
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
+  const fetchHeraldData = async () => {
+    try {
+      const data = await getMonthlyHerald();
+      // console.log("Monthlyheralddata",data);
+      setHeraldData(data);
+    } catch (error) {
+      console.log("Failed to load Monthly Herald");
+    }
+  };
+ 
 
-  const filteredCards = cards.filter((card) =>
-  card.topic.toLowerCase().includes(search.toLowerCase())
-);
+//show ai suggestion modal box
+const handleAISuggestionClick = (id) => {
+  setSelectedId(id);
+  setShowAISuggestion(true);
+};
 
-  const currentCards = filteredCards.slice(startIndex, endIndex);
+//navigate to monthly route 
+const handleViewDetails = (id) => {
+  navigate(`/monthlyplan/${id}`);
+};
+
+ 
+
+
+
+
 
 
   return (
@@ -174,7 +78,7 @@ const MonthlyHerald = () => {
   </Form.Select>
 </Col>
 
-<Col className="text-end  mt-sm-2 mt-0">
+<Col className="text-end  mt-0">
   <Button className="radiantBlue">
     <FaBell />
   </Button>
@@ -214,7 +118,7 @@ const MonthlyHerald = () => {
       </Row>
 
       <Row className="mt-4">
-        {currentCards.map((card, index) => (
+        {heraldData.map((card, index) => (
             <Col md={4} className="mb-4" key={index}>
               <div
                 className="monthlyheraldbox p-3"
@@ -222,7 +126,7 @@ const MonthlyHerald = () => {
                 <Row>
                   <Col className="text-start">
                     <h6 style={{ fontWeight: "bold", color: "#1179f0ff" }}>
-                      {card.date}
+                      {card.teacher_suggestion.month}
                     </h6>
                   </Col>
                   <Col className="text-end">
@@ -242,68 +146,76 @@ const MonthlyHerald = () => {
                 <hr className="mt-2 mb-0"/>
 
                 <div className="row mt-2">
-                  <div className="col-4 text-start">
+                  <div className="col-lg-4 col-6 text-start">
                     <div className="h6">Total Topics</div>
-                    <p>0/32</p>
+                   <p>0/{Object.keys(card.period_plan).length}</p>
                   </div>
-                  <div className="col-4 text-start">
+                  <div className="col-lg-4 col-6 text-start">
                     <div className="h6">Total Periods</div>
-                    <p>22</p>
+                    <p>{card.total_periods}</p>
                   </div>
-                  <div className="col-4 text-start">
+                  <div className="col-lg-4 col-6 text-start">
                     <div className="h6">Subjects</div>
-                    <p>English</p>
+                    <p>{card.subject}</p>
                   </div>
                 </div>
 
                 <Row className="mt-3">
-                 <div className="col-8 text-start gap-3 d-flex">
-<div   className="rounded-4 d-flex align-items-center gap-2 py-2 px-1"
-  style={{
-    cursor: "pointer",
-    fontWeight: 400,
-    background:" #F3A250",
-    transition: "all 0.3s ease",
-  }}>
-  Completed
-</div>
-<div
-  className="rounded-4 border border-primary d-flex align-items-center gap-2 py-2 px-1"
-  style={{
-    cursor: "pointer",
-    color: "#0d6efd", // Bootstrap primary
-    fontWeight: 400,
-    transition: "all 0.3s ease",
-  }}
->
-  <img
-    src={ailogo}
-    alt="AI"
-    style={{ width: "20px", height: "20px", objectFit: "contain" }}
-  />
-  <span>AI Suggestions</span>
+                 <div className="col-lg-8 text-start gap-3 d-flex flex-column flex-lg-row">
+<div className="row g-2">
+
+  <div className="col-lg-6 col-12">
+    <div
+      className="rounded-4 d-flex align-items-center py-1 px-3"
+      style={{
+        cursor: "pointer",
+        
+        background: "#F3A250",
+        transition: "all 0.3s ease",
+      }}
+    >
+      
+      <span className="ai-text">Completed</span>
+    </div>
+  </div>
+
+  <div className="col-lg-6 col-12">
+  <div
+    className="rounded-4 ai-btn border align-items-center border-primary d-flex gap-2 py-1 px-3"
+    onClick={() => handleAISuggestionClick(card._id)} 
+  >
+    <img
+      src={ailogo}
+      alt="AI"
+      style={{ width: "20px", height: "20px", objectFit: "contain" }}
+    />
+    <span className="ai-text">AI Suggestions</span>
+  </div>
 </div>
 
-  
 </div>
-                  <Col className="text-end">
+
+ 
+
+  
+
+</div>
+
+                  <div className="col-lg-4 col-12 text-end mt-lg-0 mt-2 ">
                     <Button
                       size="sm"
-                      style={{
-                        backgroundColor: "#d9e6f8ff",
-                        color: "#1b76f5ff",
-                        border: "none",
-                      }}
+                      className="radiantBlue ai-text"
+                      onClick={() => handleViewDetails(card._id)}
                     >
                       View Details
                     </Button>
-                  </Col>
+                  </div>
                 </Row>
               </div>
             </Col>
           ))}
       </Row>
-      <div className="mt-auto">
+      {/* <div className="mt-auto">
         <div className="d-flex justify-content-between mt-3">
           <span className="text-muted">
   Page {currentPage} of {Math.ceil(filteredCards.length / itemsPerPage)} • 
@@ -336,8 +248,16 @@ const MonthlyHerald = () => {
             />
           </Pagination>
         </div>
-      </div>
+      </div> */}
+      <AiSuggestionModal
+      show={showAISuggestion}
+      handleClose={() => setShowAISuggestion(false)}
+      aidata={heraldData}
+      id={selectedId} 
+      
+      ></AiSuggestionModal>
     </div>
+    
   );
 };
 export default MonthlyHerald;
