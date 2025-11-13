@@ -4,6 +4,7 @@ import "../Styles/MonthlyHerald.css";
 import { FaPencilAlt } from "react-icons/fa";
 import { SlCalender } from "react-icons/sl";
 import { FaBell } from "react-icons/fa6";
+import ailogo from "../assets/HIS/images/AI LOGO 3.png"
 
 
 const MonthlyHerald = () => {
@@ -11,7 +12,7 @@ const MonthlyHerald = () => {
 
   const cards = [
     {
-      date: "Nov 12, 2025",
+      date: "Nov 12",
       time: "9:00 AM",
       period: "1 - Period",
       chapter: "U6: Let's Perform",
@@ -19,7 +20,7 @@ const MonthlyHerald = () => {
       status: "Upcoming",
     },
     {
-      date: "Nov 11, 2025",
+      date: "Nov 11",
       time: "03:00 PM",
       period: "3 - Period",
       chapter: "U6: Let's Perform",
@@ -27,7 +28,7 @@ const MonthlyHerald = () => {
       status: "Upcoming",
     },
     {
-      date: "Nov 10, 2025",
+      date: "Nov 10",
       time: "9:00 AM",
       period: "1 - Period",
       chapter: "U6: Let's Perform",
@@ -35,7 +36,7 @@ const MonthlyHerald = () => {
       status: "Pending",
     },
     {
-      date: "Nov 10, 2025",
+      date: "Nov",
       time: "9:00 AM",
       period: "1 - Period",
       chapter: "U6: Let's Perform",
@@ -43,7 +44,7 @@ const MonthlyHerald = () => {
       status: "Completed",
     },
     {
-      date: "Oct 15, 2025",
+      date: "Oct 15",
       time: "12:00 PM",
       period: "4 - Period",
       chapter: "U3: My World",
@@ -51,7 +52,7 @@ const MonthlyHerald = () => {
       status: "Complete",
     },
     {
-      date: "Oct 28, 2025",
+      date: "Oct 28",
       time: "2:00 PM",
       period: "3 - Period",
       chapter: "U5: Story Time",
@@ -59,7 +60,7 @@ const MonthlyHerald = () => {
       status: "Complete",
     },
     {
-      date: "Oct 20, 2025",
+      date: "Oct 20",
       time: "1:00 PM",
       period: "2 - Period",
       chapter: "U4: Numbers Around",
@@ -67,7 +68,7 @@ const MonthlyHerald = () => {
       status: "Pending",
     },
     {
-      date: "Nov 04, 2025",
+      date: "Nov 04",
       time: "2:00 PM",
       period: "5 - Period",
       chapter: "U5: Story Time",
@@ -75,7 +76,7 @@ const MonthlyHerald = () => {
       status: "Complete",
     },
     {
-      date: "Oct 29, 2025",
+      date: "Oct 29",
       time: "2:00 PM",
       period: "3 - Period",
       chapter: "U5: Story Time",
@@ -83,7 +84,7 @@ const MonthlyHerald = () => {
       status: "Complete",
     },
     {
-  date: "Nov 09, 2025",
+  date: "Nov 09",
   time: "11:00 AM",
   period: "2 - Period",
   chapter: "U6: Let's Perform",
@@ -91,7 +92,7 @@ const MonthlyHerald = () => {
   status: "Upcoming",
 },
 {
-  date: "Nov 08, 2025",
+  date: "Nov 08",
   time: "02:00 PM",
   period: "4 - Period",
   chapter: "U6: Let's Perform",
@@ -99,7 +100,7 @@ const MonthlyHerald = () => {
   status: "Pending",
 },
 {
-  date: "Nov 07, 2025",
+  date: "Nov 07",
   time: "9:00 AM",
   period: "1 - Period",
   chapter: "U6: Let's Perform",
@@ -107,7 +108,7 @@ const MonthlyHerald = () => {
   status: "Completed",
 },
 {
-  date: "Nov 06, 2025",
+  date: "Nov 06",
   time: "3:00 PM",
   period: "5 - Period",
   chapter: "U5: Story Time",
@@ -115,7 +116,7 @@ const MonthlyHerald = () => {
   status: "Complete",
 },
 {
-  date: "Nov 05, 2025",
+  date: "Nov 05",
   time: "2:00 PM",
   period: "4 - Period",
   chapter: "U5: Story Time",
@@ -123,7 +124,7 @@ const MonthlyHerald = () => {
   status: "Upcoming",
 },
 {
-  date: "Nov 03, 2025",
+  date: "Nov 03",
   time: "12:00 PM",
   period: "3 - Period",
   chapter: "U5: Story Time",
@@ -147,7 +148,7 @@ const MonthlyHerald = () => {
   return (
     <div className="monthlyherald_main_content">
        <Row className="">
-                <Col md={6}>
+                <Col className="col-12 col-lg-8">
                   <div className="text-start">
                     <h3 className=" bold">Monthly Herald</h3>
                     <p className="text-muted" style={{ marginTop: "-4px" }}>
@@ -155,29 +156,29 @@ const MonthlyHerald = () => {
                     </p>
                   </div>
                 </Col>
-                <Col md={6}>
-                  <Row className="justify-content-end">
-                    <Col md={3}>
+                <Col className="col-12 col-lg-4 ">
+                  <Row className="justify-content-lg-center justify-content-end ">
+                    {/* <Col md={3}>
                       <Form.Select>
                         <option className="bold">Oct 2025</option>
                         <option className="bold">Sep 2025</option>
                         <option className="bold">Aug 2025</option>
                       </Form.Select>
-                    </Col>
+                    </Col> */}
       
-                    <Col md={3}>
-                      <Form.Select>
-                        <option>GRADE - 3A</option>
-                        <option>GRADE - 3B</option>
-                        <option>GRADE - 4A</option>
-                      </Form.Select>
-                    </Col>
-      
-                    <Col md={2} className="text-end">
-                      <Button className="radiantBlue">
-                        <FaBell />
-                      </Button>
-                    </Col>
+                    <Col className="col-lg-8">
+  <Form.Select>
+    <option>GRADE - 3A</option>
+    <option>GRADE - 3B</option>
+    <option>GRADE - 4A</option>
+  </Form.Select>
+</Col>
+
+<Col className="text-end  mt-sm-2 mt-0">
+  <Button className="radiantBlue">
+    <FaBell />
+  </Button>
+</Col>
                   </Row>
                 </Col>
               </Row>
@@ -185,32 +186,27 @@ const MonthlyHerald = () => {
 
       <Row className="mt-3 align-items-center">
         <Col md={3} className="text-start ps-2 text-primary">
-          <h5>Lesson Plans</h5>
+          <h5>Monthly Plans</h5>
         </Col>
 
         <Col md={9}>
           <Row className="justify-content-end g-2">
-            <Col md={2}>
+            <Col md={4}>
+  <Form.Select>
+    <option>2024 - 2025</option>
+    <option>2025 - 2026</option>
+    <option>2026 - 2027</option>
+  </Form.Select>
+</Col>
+
+            <Col md={3}>
               <Form.Select>
-                <option>November, 2025 <SlCalender /></option>
+                <option>Complete</option>
               </Form.Select>
             </Col>
 
-            <Col md={1}>
-              <Form.Select>
-                <option>All</option>
-              </Form.Select>
-            </Col>
 
-            <Col md={2}>
-              <Form.Control
-                placeholder="Search..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-            </Col>
-
-            <Col md={2} className="text-end">
+            <Col md={3} className="text-end">
               <Button className=" w-100 radiantBlue">+ Upload</Button>
             </Col>
           </Row>
@@ -218,82 +214,16 @@ const MonthlyHerald = () => {
       </Row>
 
       <Row className="mt-4">
-        {currentCards
-          
-          .map((card, index) => (
+        {currentCards.map((card, index) => (
             <Col md={4} className="mb-4" key={index}>
               <div
-                style={{
-                  border: "1px solid #e0e0e0",
-                  borderRadius: 10,
-                  padding: 20,
-                  background: "#fff",
-                }}
+                className="monthlyheraldbox p-3"
               >
                 <Row>
                   <Col className="text-start">
                     <h6 style={{ fontWeight: "bold", color: "#1179f0ff" }}>
                       {card.date}
                     </h6>
-                    <p className="text-muted" style={{ marginBottom: 5 }}>
-                      {card.time}
-                    </p>
-                  </Col>
-                  <Col className="text-end">
-                    <span
-                      style={{
-                        padding: "3px 8px",
-                        background: "#fff",
-                        border: "1px solid #e0e0e0",
-                        borderRadius: 5,
-                        fontSize: 12,
-                        color: "#1179f0ff",
-                      }}
-                    >
-                      {card.period}
-                    </span>
-                  </Col>
-                </Row>
-                <hr />
-
-                <div className="text-start">
-                  <p style={{ fontSize: 14, marginTop: 10 }}>
-                    Lesson / Chapter
-                    <br />
-                    <div
-                      className="text-primary"
-                      style={{ fontWeight: "bold" }}
-                    >
-                      {card.chapter}
-                    </div>
-                  </p>
-
-                  <p style={{ fontSize: 14 }}>
-                    Topics to Cover:
-                    <br />
-                    <strong>{card.topic}</strong>
-                  </p>
-                </div>
-
-                <Row className="mt-3">
-                  <Col className="text-start">
-                    <span
-                      style={{
-                        padding: "5px 10px",
-
-                        background:
-                          card.status === "Upcoming"
-                            ? "#fca14bff"
-                            : card.status === "Pending"
-                            ? "#c50707ff"
-                            : "#449258ff",
-                        borderRadius: 20,
-                        fontSize: 12,
-                        color: "white",
-                      }}
-                    >
-                      {card.status}
-                    </span>
                   </Col>
                   <Col className="text-end">
                     <Button
@@ -306,6 +236,66 @@ const MonthlyHerald = () => {
                     >
                       <FaPencilAlt className="me-2" />
                       Edit
+                    </Button>
+                  </Col>
+                </Row>
+                <hr className="mt-2 mb-0"/>
+
+                <div className="row mt-2">
+                  <div className="col-4 text-start">
+                    <div className="h6">Total Topics</div>
+                    <p>0/32</p>
+                  </div>
+                  <div className="col-4 text-start">
+                    <div className="h6">Total Periods</div>
+                    <p>22</p>
+                  </div>
+                  <div className="col-4 text-start">
+                    <div className="h6">Subjects</div>
+                    <p>English</p>
+                  </div>
+                </div>
+
+                <Row className="mt-3">
+                 <div className="col-8 text-start gap-3 d-flex">
+<div   className="rounded-4 d-flex align-items-center gap-2 py-2 px-1"
+  style={{
+    cursor: "pointer",
+    fontWeight: 400,
+    background:" #F3A250",
+    transition: "all 0.3s ease",
+  }}>
+  Completed
+</div>
+<div
+  className="rounded-4 border border-primary d-flex align-items-center gap-2 py-2 px-1"
+  style={{
+    cursor: "pointer",
+    color: "#0d6efd", // Bootstrap primary
+    fontWeight: 400,
+    transition: "all 0.3s ease",
+  }}
+>
+  <img
+    src={ailogo}
+    alt="AI"
+    style={{ width: "20px", height: "20px", objectFit: "contain" }}
+  />
+  <span>AI Suggestions</span>
+</div>
+
+  
+</div>
+                  <Col className="text-end">
+                    <Button
+                      size="sm"
+                      style={{
+                        backgroundColor: "#d9e6f8ff",
+                        color: "#1b76f5ff",
+                        border: "none",
+                      }}
+                    >
+                      View Details
                     </Button>
                   </Col>
                 </Row>

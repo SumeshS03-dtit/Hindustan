@@ -138,7 +138,7 @@ const Analytics = () => {
         <Col>
           <div className="header">
             <Row className="">
-              <Col md={4}>
+              <Col className="col-md-12 col-lg-8">
                 <div className="text-start">
                   <h1 style={{ marginBottom: 4 }}>Analytics Overview</h1>
                   <p style={{ color: "#6b6b6b" }}>
@@ -146,11 +146,11 @@ const Analytics = () => {
                   </p>
                 </div>
               </Col>
-              <Col md={2}></Col>
-
+              
+    
               <Col
-                md={6}
-                className="d-flex justify-content-end align-items-center gap-3"
+                
+                className="d-flex justify-content-end align-items-center gap-3 col-md-12 col-lg-4"
               >
                 <Dropdown>
                   <Dropdown.Toggle
