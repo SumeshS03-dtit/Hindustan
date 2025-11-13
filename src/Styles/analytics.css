@@ -13,6 +13,9 @@
 .img-card{
     width : 20%
 }
+.analytics_main_content{
+  padding: 10px;
+}
 
 
 
@@ -83,4 +86,38 @@
   width: "24px";
   height: "24px";
      
+}
+
+.chart-legend {
+  display: flex;
+  gap: 24px;
+  margin-top: 12px;
+  align-items: center;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: #555;
+}
+
+.legend-box {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  display: inline-block;
+}
+
+.legend-box.blue {
+  background-color: #4A90E2;
+}
+
+.legend-box.green {
+  background-color: #4CAF50;
+}
+
+.legend-box.yellow {
+  background-color: #F9A825;
 }

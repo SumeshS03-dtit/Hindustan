@@ -1,121 +1,85 @@
 import React from "react";
-import { Col, Nav } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Col, Nav, Card, Row } from "react-bootstrap";
+import { Link, useLocation } from "react-router-dom";
 import HISKLogo from "../assets/HIS/images/HIS-logo.png";
-import '../Styles/SideBar.css';
+import teacher from "../assets/HIS/images/teacher.jpg";
+import "../Styles/SideBar.css";
 
-import analytics from '../assets/HIS/icons/analytics-icon.png';
-import dailylogs from '../assets/HIS/icons/daily-logs-icons.png';
-import lesson from '../assets/HIS/icons/monthly-herald.png';
-import classes from '../assets/HIS/icons/my-class-icon.png';
-import profilePic from '../assets/HIS/icons/my-class-icon.png';
+import analytics from "../assets/HIS/new icons/analytics.png";
+import dailylogs from "../assets/HIS/icons/daily-logs-icons.png";
+import lesson from "../assets/HIS/icons/monthly-herald.png";
+import classes from "../assets/HIS/icons/my-class-icon.png";
+import profilePic from "../assets/HIS/icons/my-class-icon.png";
+import students from "../assets/HIS/new icons/students.png";
+import attendance from "../assets/HIS/new icons/attendance.png";
+import Parents from "../assets/HIS/new icons/parents.png";
+import assessment from "../assets/HIS/new icons/assessment.png";
+import circular from "../assets/HIS/new icons/circular.png";
+import applyLeave from "../assets/HIS/new icons/apply leave.png";
+import library from "../assets/HIS/new icons/library.png";
+import gallery from "../assets/HIS/new icons/gallery.png";
+import transport from "../assets/HIS/new icons/transport.png";
+import hostel from "../assets/HIS/new icons/hostel.png";
 
 const SideBar = () => {
+  const location = useLocation();
+
+  const navItems = [
+    { path: "/analytics", label: "Analytics", icon: analytics },
+    { path: "/monthlyherald", label: "Monthly Herald", icon: lesson },
+    { path: "/dailylog", label: "Daily Logs", icon: dailylogs },
+    { path: "/myclasses", label: "My Classes", icon: classes },
+    { label: "Students", icon: students },
+    { label: "Attendance", icon: attendance },
+    { label: "Report Card", icon: classes },
+    { label: "Parents", icon: Parents },
+    { label: "Assessment", icon: assessment },
+    { label: "Circular", icon: circular },
+    { label: "Apply Leave", icon: applyLeave },
+    { label: "Library", icon: library },
+    { label: "Gallery", icon: gallery },
+    { label: "Transport", icon: transport },
+    { label: "Hostel", icon: hostel },
+  ];
   return (
     <div className="sidebar d-flex flex-column align-items-center p-3">
       <img src={HISKLogo} alt="HISK Logo" className="logo img-fluid" />
 
       <Nav className="flex-column w-100 mt-4">
-        <Link to="/analytics" className="nav-link">
-          <div className="nav-item">
-            <img src={analytics} className="icon bg-primary"  alt="Analytics" />
-            <span>Analytics</span>
-          </div>
-        </Link>
-        <Link to="/monthlyherald" className="nav-link">
-          <div className="nav-item">
-            <img src={lesson} className="icon " alt="Monthly Herald" />
-            <span>Monthly Herald</span>
-          </div>
-        </Link>
-        <Link to="/dailylog" className="nav-link">
-          <div className="nav-item">
-            <img src={dailylogs} className="icon" alt="Daily Logs" />
-            <span>Daily Logs</span>
-          </div>
-        </Link>
-        <Link to="/myclasses" className="nav-link">
-          <div className="nav-item">
-            <img src={classes} className="icon" alt="My Classes" />
-            <span>My Classes</span>
-          </div>
-        </Link>
-        <Link  className="nav-link">
-          <div className="nav-item">
-            <img src={classes} className="icon" alt="My Classes" />
-            <span>Attendance</span>
-          </div>
-        </Link>
-        <Link  className="nav-link">
-          <div className="nav-item">
-            <img src={classes} className="icon" alt="My Classes" />
-            <span>Students</span>
-          </div>
-        </Link>
-        <Link  className="nav-link">
-          <div className="nav-item">
-            <img src={classes} className="icon" alt="My Classes" />
-            <span>Students</span>
-          </div>
-        </Link>
-        <Link  className="nav-link">
-          <div className="nav-item">
-            <img src={classes} className="icon" alt="My Classes" />
-            <span>Report Card</span>
-          </div>
-        </Link>
-        <Link  className="nav-link">
-          <div className="nav-item">
-            <img src={classes} className="icon" alt="My Classes" />
-            <span>Parents</span>
-          </div>
-        </Link>
-        <Link  className="nav-link">
-          <div className="nav-item">
-            <img src={classes} className="icon" alt="My Classes" />
-            <span>Assesment</span>
-          </div>
-        </Link>
-        <Link  className="nav-link">
-          <div className="nav-item">
-            <img src={classes} className="icon" alt="My Classes" />
-            <span>Circular</span>
-          </div>
-        </Link>
-        <Link  className="nav-link">
-          <div className="nav-item">
-            <img src={classes} className="icon" alt="My Classes" />
-            <span>Apply Leave</span>
-          </div>
-        </Link>
-        <Link  className="nav-link">
-          <div className="nav-item">
-            <img src={classes} className="icon" alt="My Classes" />
-            <span>Library</span>
-          </div>
-        </Link>
-        <Link  className="nav-link">
-          <div className="nav-item">
-            <img src={classes} className="icon" alt="My Classes" />
-            <span>Gallery</span>
-          </div>
-        </Link>
-        <Link  className="nav-link">
-          <div className="nav-item">
-            <img src={classes} className="icon" alt="My Classes" />
-            <span>Transport</span>
-          </div>
-        </Link>
-        <Link  className="nav-link">
-          <div className="nav-item">
-            <img src={classes} className="icon" alt="My Classes" />
-            <span>Hostel</span>
-          </div>
-        </Link>
+        {navItems.map((item, index) => (
+          <Link
+            to={item.path}
+            key={index}
+            className={`nav-link ${
+              location.pathname === item.path ? "active" : ""
+            }`}
+          >
+            <div className="nav-item ">
+              <img src={item.icon} className="icon" alt={item.label} />
+              <span>{item.label}</span>
+            </div>
+          </Link>
+        ))}
       </Nav>
+      <div className="footer_teacher mt-3">
+  <Card className="p-0">
+    <div className="nav-item teacher-box">
+      <img
+        src={teacher}
+        className="teacher-img"
+        alt="Teacher"
+        style={{width:'20%', borderRadius:'10px',}}
+      />
+      <span className="teacher-text ms-2">
+        <div className="fw-bold text-primary">MS. Gwen</div>
+        <div className="text-muted small">English</div>
+      </span>
+    </div>
+  </Card>
+</div>
+
     </div>
   );
 };
-
 
 export default SideBar;

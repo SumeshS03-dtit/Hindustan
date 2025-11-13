@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import "../Styles/Dailylogs.css";
 import bell from "../assets/HIS/icons/Vector-4.png";
-import star from "../assets/HIS/icons/star.png";
+import star from "../assets/HIS/icons/star.jpeg";
 import PEN from "../assets/HIS/icons/pen.png";
 import upload from "../assets/HIS/icons/upload.png";
 import { MdOutlineUpload } from "react-icons/md";
 import { AiOutlineFilePdf } from "react-icons/ai";
 import { FaBell } from "react-icons/fa6";
 import { FaSearch } from "react-icons/fa";
+import { IoMdAdd } from "react-icons/io";
+import { MdAttachFile } from "react-icons/md";
 import {
   Row,
   Col,
@@ -16,254 +18,63 @@ import {
   Table,
   Pagination,
   InputGroup,
+  Modal,
 } from "react-bootstrap";
 
 const DailyLog = () => {
   const [search, setSearch] = useState("");
+  const [showReport, setShowReport] = useState(false);
+
+  const aiReport = () => {
+    setShowReport(true);
+    console.log("clicked");
+  };
 
   const logs = [
     {
-      date: "Oct 31, 2025",
-      lesson: "U6 Let's Perform",
-      topic: "6.1 What Nonsense",
-      activity: "Write your own nonsense poem",
-      duration: "45 min",
-      attendance: "28/30",
-      file: "pdf",
+      date: "Nov 06, 2025",
+      lesson: "Unit 6: Let's Perform",
+      topic: "6.3 More Powerful Language",
+      activity: "Role play sparrows quest..",
+      notes: "Role play sparrows quest..",
+      attachment: true,
+      noOfPeriods: 1,
     },
     {
-      date: "Oct 30, 2025",
-      lesson: "U6 Let's Perform",
+      date: "Nov 06, 2025",
+      lesson: "Unit 6: Let's Perform",
+      topic: "6.3 More Powerful Language",
+      activity: "Role play sparrows quest..",
+      notes: "Role play sparrows quest..",
+      attachment: false,
+      noOfPeriods: 1,
+    },
+    {
+      date: "Nov 05, 2025",
+      lesson: "Unit 6: Let's Perform",
       topic: "6.2 From Story to Play",
-      activity: "Role play sparrows",
-      duration: "45 min",
-      attendance: "30/30",
-      file: "pdf",
+      activity: "Narrate a story",
+      notes: "Narrate a story",
+      attachment: false,
+      noOfPeriods: 1,
     },
     {
-      date: "Oct 29, 2025",
-      lesson: "U5 Exploring Nature",
-      topic: "5.3 The Busy Honeybee",
-      activity: "Draw and label parts of a beehive",
-      duration: "40 min",
-      attendance: "29/30",
-      file: "pdf",
+      date: "Nov 04, 2025",
+      lesson: "Unit 6: Let's Perform",
+      topic: "6.1 What are Actions",
+      activity: "The flippery flopper jumped..",
+      notes: "The flippery flopper jumped..",
+      attachment: false,
+      noOfPeriods: 3,
     },
     {
-      date: "Oct 28, 2025",
-      lesson: "U5 Exploring Nature",
-      topic: "5.2 Seasons Around Us",
-      activity: "Create a seasons chart",
-      duration: "45 min",
-      attendance: "27/30",
-      file: "pdf",
-    },
-    {
-      date: "Oct 27, 2025",
-      lesson: "U5 Exploring Nature",
-      topic: "5.1 Nature Walk",
-      activity: "Collect leaves and classify",
-      duration: "50 min",
-      attendance: "30/30",
-      file: "pdf",
-    },
-    {
-      date: "Oct 26, 2025",
-      lesson: "U4 My Feelings",
-      topic: "4.3 Understanding Emotions",
-      activity: "Emotion wheel drawing",
-      duration: "35 min",
-      attendance: "28/30",
-      file: "pdf",
-    },
-    {
-      date: "Oct 25, 2025",
-      lesson: "U4 My Feelings",
-      topic: "4.2 Talking About Feelings",
-      activity: "Share and discuss a happy moment",
-      duration: "45 min",
-      attendance: "29/30",
-      file: "pdf",
-    },
-    {
-      date: "Oct 24, 2025",
-      lesson: "U4 My Feelings",
-      topic: "4.1 Identifying Emotions",
-      activity: "Match faces with emotions",
-      duration: "40 min",
-      attendance: "30/30",
-      file: "pdf",
-    },
-    {
-      date: "Oct 23, 2025",
-      lesson: "U3 Stories We Love",
-      topic: "3.3 The Clever Fox",
-      activity: "Retell the story in pairs",
-      duration: "45 min",
-      attendance: "26/30",
-      file: "pdf",
-    },
-    {
-      date: "Oct 22, 2025",
-      lesson: "U3 Stories We Love",
-      topic: "3.2 The Thirsty Crow",
-      activity: "Draw the story sequence",
-      duration: "40 min",
-      attendance: "27/30",
-      file: "pdf",
-    },
-    {
-      date: "Oct 21, 2025",
-      lesson: "U3 Stories We Love",
-      topic: "3.1 Story Reading",
-      activity: "Picture comprehension",
-      duration: "45 min",
-      attendance: "28/30",
-      file: "pdf",
-    },
-    {
-      date: "Oct 19, 2025",
-      lesson: "U2 Our World",
-      topic: "2.2 Places Around Us",
-      activity: "Map drawing of local area",
-      duration: "45 min",
-      attendance: "29/30",
-      file: "pdf",
-    },
-    {
-      date: "Oct 18, 2025",
-      lesson: "U2 Our World",
-      topic: "2.1 My Neighborhood",
-      activity: "Neighborhood observation walk",
-      duration: "50 min",
-      attendance: "28/30",
-      file: "pdf",
-    },
-    {
-      date: "Oct 17, 2025",
-      lesson: "U1 Myself",
-      topic: "1.3 My Routines",
-      activity: "Write daily routine schedule",
-      duration: "40 min",
-      attendance: "25/30",
-      file: "pdf",
-    },
-    {
-      date: "Oct 16, 2025",
-      lesson: "U1 Myself",
-      topic: "1.2 My Family",
-      activity: "Create family tree drawing",
-      duration: "45 min",
-      attendance: "27/30",
-      file: "pdf",
-    },
-    {
-      date: "Oct 15, 2025",
-      lesson: "U1 Myself",
-      topic: "1.1 Who Am I?",
-      activity: "Self-introduction circle time",
-      duration: "35 min",
-      attendance: "30/30",
-      file: "pdf",
-    },
-    {
-      date: "Oct 14, 2025",
-      lesson: "EVS",
-      topic: "Plants Around Us",
-      activity: "Seed planting experiment",
-      duration: "55 min",
-      attendance: "29/30",
-      file: "pdf",
-    },
-    {
-      date: "Oct 13, 2025",
-      lesson: "Math",
-      topic: "Addition with Carry",
-      activity: "Worksheet practice",
-      duration: "45 min",
-      attendance: "30/30",
-      file: "pdf",
-    },
-    {
-      date: "Oct 12, 2025",
-      lesson: "Math",
-      topic: "Subtraction with Borrowing",
-      activity: "Hands-on abacus practice",
-      duration: "50 min",
-      attendance: "28/30",
-      file: "pdf",
-    },
-    {
-      date: "Oct 11, 2025",
-      lesson: "English",
-      topic: "Reading Comprehension",
-      activity: "Paragraph reading and Q&A",
-      duration: "40 min",
-      attendance: "29/30",
-      file: "pdf",
-    },
-    {
-      date: "Oct 10, 2025",
-      lesson: "English",
-      topic: "Nouns",
-      activity: "Noun hunt in classroom",
-      duration: "45 min",
-      attendance: "27/30",
-      file: "pdf",
-    },
-    {
-      date: "Oct 09, 2025",
-      lesson: "English",
-      topic: "Grammar Basics",
-      activity: "Identify verbs and adjectives",
-      duration: "40 min",
-      attendance: "30/30",
-      file: "pdf",
-    },
-    {
-      date: "Oct 08, 2025",
-      lesson: "Science",
-      topic: "Living vs Non-Living",
-      activity: "Classification chart activity",
-      duration: "45 min",
-      attendance: "28/30",
-      file: "pdf",
-    },
-    {
-      date: "Oct 07, 2025",
-      lesson: "Science",
-      topic: "Parts of a Plant",
-      activity: "Label parts of a plant diagram",
-      duration: "50 min",
-      attendance: "29/30",
-      file: "pdf",
-    },
-    {
-      date: "Oct 06, 2025",
-      lesson: "Science",
-      topic: "Water Sources",
-      activity: "Poster making: Save Water",
-      duration: "45 min",
-      attendance: "30/30",
-      file: "pdf",
-    },
-    {
-      date: "Oct 05, 2025",
-      lesson: "EVS",
-      topic: "Cleanliness",
-      activity: "Classroom cleaning activity",
-      duration: "35 min",
-      attendance: "26/30",
-      file: "pdf",
-    },
-    {
-      date: "Oct 20, 2025",
-      lesson: "U2 Our World",
-      topic: "2.3 Communities",
-      activity: "Group role play on helpers",
-      duration: "50 min",
-      attendance: "30/30",
-      file: "pdf",
+      date: "Nov 03, 2025",
+      lesson: "Unit 6: Let's Perform",
+      topic: "6.1 What are Actions",
+      activity: "Write your own nonsense..",
+      notes: "Write your own nonsense..",
+      attachment: false,
+      noOfPeriods: 1,
     },
   ];
 
@@ -285,7 +96,7 @@ const DailyLog = () => {
           <Col md={6}>
             <div className="text-start">
               <h3 className=" bold">Daily Logs</h3>
-              <p className="text-muted" style={{ marginTop: "-4px" }}>
+              <p className="text-muted" style={{ marginTop: "-15px" }}>
                 Record and track your daily lessons
               </p>
             </div>
@@ -347,24 +158,23 @@ const DailyLog = () => {
           </Col>
           <Col className="text-end" md={2}>
             <Button className="radiantBlue">
-              <MdOutlineUpload />
-              Update Log
+              <IoMdAdd className="me-2 mb-1" />
+              Add Log
             </Button>
           </Col>
         </Row>
 
-        <div className="flex-grow-1">
-          <Table hover responsive bordered className="align-middle">
-            <thead className="table-light">
+        <div className="flex-grow-1 table_dailylog-wrapper">
+          <Table hover responsive className="align-middle table_dailylog">
+            <thead className="table ">
               <tr>
                 <th>Date</th>
                 <th>Lesson/chapter</th>
                 <th>Topic</th>
                 <th>Activity</th>
-                <th>Duration</th>
-
-                <th>File</th>
-                <th>Actions</th>
+                <th>Notes</th>
+                <th>No of Periods</th>
+                <th>Action</th>
               </tr>
             </thead>
 
@@ -378,43 +188,48 @@ const DailyLog = () => {
                     <td>{log.date}</td>
                     <td>{log.lesson}</td>
                     <td>{log.topic}</td>
-                    <td>{log.activity || "-"}</td>
-                    <td>{log.duration}</td>
-
                     <td>
-                      <Button
-                        variant="outline-primary"
-                        size="sm"
-                        className="py-0 px-2 outline"
-                      >
-                        <AiOutlineFilePdf className="me-1" />
-                        pdf
-                      </Button>
+                      {log.activity}
+                      {log.attachment && (
+                        <div
+                          className="text-primary"
+                          style={{ cursor: "pointer" }}
+                        >
+                          <MdAttachFile /> Attachment
+                        </div>
+                      )}
                     </td>
                     <td>
-                      <Button
-                        className="bg-white me-1 outline"
-                        style={{ borderRadius: "50%" }}
-                      >
-                        <img
-                          className=" bg-white me-2 "
-                          src={star}
-                          style={{
-                            width: "20PX",
-                            height: "30px",
-                            borderRadius: "50%",
-                          }}
-                        />
-                      </Button>
+                      {log.notes}
+                      {log.attachment && (
+                        <div
+                          className="text-primary"
+                          style={{ cursor: "pointer" }}
+                        >
+                          <MdAttachFile /> Attachment
+                        </div>
+                      )}
+                    </td>
+                    <td>{log.noOfPeriods}</td>
+                    <td>
+                     <Button
+  className="bg-white custom_ai_btn d-flex align-items-center gap-2"
+  style={{ marginInline: "15px", borderRadius: "20px" }}
+  onClick={aiReport}
+>
+  <img
+    src={star}
+    style={{ width: 20, height: 20 }}
+  />
+
+  <span className="text-primary">Ai Reports</span>
+</Button>
+
                       <Button
                         className="bg-white outline"
                         style={{ borderRadius: "50%" }}
                       >
-                        <img
-                          className=" bg-white "
-                          src={PEN}
-                          style={{ width: "20PX", height: "30px" }}
-                        />
+                        <img src={PEN} style={{ width: 20, height: 20 }} />
                       </Button>
                     </td>
                   </tr>
@@ -454,6 +269,19 @@ const DailyLog = () => {
                 onClick={() => setCurrentPage(currentPage + 1)}
               />
             </Pagination>
+
+            <Modal
+              show={showReport}
+              onHide={() => setShowReport(false)}
+              centered
+            >
+              <Modal.Header>
+                <h1>Lesson Topic Vs Monthly Herald</h1>
+                <p>AI Comparison</p>
+              </Modal.Header>
+              <Modal.Body>School notice</Modal.Body>
+              <Modal.Footer> this footer</Modal.Footer>
+            </Modal>
           </div>
         </div>
       </div>
