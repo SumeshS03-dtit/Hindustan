@@ -9,7 +9,7 @@ import {
   Button,
   ButtonGroup,
 } from "react-bootstrap";
-import star from "../assets/HIS/icons/star.png";
+import star from "../assets/HIS/icons/ai start.jpg";
 
 import plannedtopics from "../assets/HIS/icons/planned-topics.png";
 import coveredTopics from "../assets/HIS/icons/coveredTopics.png";
@@ -33,37 +33,82 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import { FaWeight } from "react-icons/fa";
 
+
+
+//daily
 const dailyData = [
-  { name: "Nov 03", actual: 8, completed: 8, partial: 5 },
-  { name: "Nov 04", actual: 8, completed: 8, partial: 4 },
-  { name: "Nov 05", actual: 8, completed: 8, partial: 0 },
-  { name: "Nov 06", actual: 6, completed: 4, partial: 2 },
-  { name: "Nov 07", actual: 8, completed: 5, partial: 4 },
+  { name: "Nov 03", actual: 6, completed: 6, partial: 0 },
+  { name: "Nov 04", actual: 6, completed: 0, partial: 4 },
+  { name: "Nov 05", actual: 4, completed: 6, partial: 0 },
+  { name: "Nov 06", actual: 3, completed: 0, partial: 1 },
+  { name: "Nov 07", actual: 5, completed: 0, partial: 3 },
 ];
 
+const processedData = dailyData.map((item) => {
+  const bars = [];
+
+  if (item.actual > 0) bars.push({ key: "actual", value: item.actual });
+
+  if (item.completed > 0)
+    bars.push({ key: "completed", value: item.completed });
+
+  if (item.partial > 0) bars.push({ key: "partial", value: item.partial });
+
+  return {
+    name: item.name,
+    bar1: bars[0]?.value || 0,
+    bar1Key: bars[0]?.key || null,
+
+    bar2: bars[1]?.value || 0,
+    bar2Key: bars[1]?.key || null,
+
+    bar3: bars[2]?.value || 0,
+    bar3Key: bars[2]?.key || null,
+  };
+});
+
+//daily
+
+// const barKeys = Object.keys(processedData[0]).filter((k) => k !== "name");
+
+const getColor = (key) => {
+  if (key === "actual") return "#4A90E2";
+  if (key === "completed") return "#4CAF50";
+  if (key === "partial") return "#F9A825";
+  return "transparent";
+};
+//Weekly
 const monthlyData = [
-  { name: "Week 1", actual: 20, completed: 18, partial: 13 },
-  { name: "Week 2", actual: 17, completed: 15, partial: 10 },
-  { name: "Week 3", actual: 18, completed: 18, partial: 12 },
-  { name: "Week 4", actual: 17, completed: 15, partial: 11 },
+  { name: "Week 1", actual: 15, completed: 15, partial: 0 },
+  { name: "Week 2", actual: 13, completed: 0, partial: 11 },
+  { name: "Week 3", actual: 13, completed: 15, partial: 0 },
+  { name: "Week 4", actual: 7, completed: 5, partial: 0 },
 ];
 
-// const completionRateData = [
-//   { month: "Jun", rate: 70 },
-//   { month: "Jul", rate: 20 },
-//   { month: "Aug", rate: 80 },
-//   { month: "Sep", rate: 40 },
-//   { month: "Oct", rate: 55 },
-// ];
+const weeklyProcessed = monthlyData.map((item) => {
+  const bars = [];
 
-// const topicEfficiencyData = [
-//   { topic: "Number Systems", value: 35 },
-//   { topic: "Algebra", value: 80 },
-//   { topic: "Fractions", value: 60 },
-//   { topic: "Decimals", value: 75 },
-//   { topic: "Geometry", value: 45 },
-// ];
+  if (item.actual > 0) bars.push({ key: "actual", value: item.actual });
+
+  if (item.completed > 0)
+    bars.push({ key: "completed", value: item.completed });
+
+  if (item.partial > 0) bars.push({ key: "partial", value: item.partial });
+
+  return {
+    name: item.name,
+    bar1: bars[0]?.value || 0,
+    bar1Key: bars[0]?.key || null,
+
+    bar2: bars[1]?.value || 0,
+    bar2Key: bars[1]?.key || null,
+
+    bar3: bars[2]?.value || 0,
+    bar3Key: bars[2]?.key || null,
+  };
+}); //weekly
 
 const data = [
   {
@@ -72,7 +117,7 @@ const data = [
     total: 12,
     status: "Completed",
     color: "#4CAF50",
-    statusColor: "#C8E6C9", // soft green badge
+    statusColor: "#C8E6C9",
     statusText: "#2E7D32",
   },
   {
@@ -81,7 +126,7 @@ const data = [
     total: 10,
     status: "Behind Schedule",
     color: "#FF9800",
-    statusColor: "#FFE0B2", // soft orange badge
+    statusColor: "#FFE0B2",
     statusText: "#E65100",
   },
   {
@@ -90,7 +135,7 @@ const data = [
     total: 11,
     status: "On Track",
     color: "#7E57C2",
-    statusColor: "#D1C4E9", // soft purple badge
+    statusColor: "#D1C4E9",
     statusText: "#4A148C",
   },
   {
@@ -115,42 +160,42 @@ const data = [
 
 const insights = [
   {
-    title: "Accelerated Fractions Review",
-    desc: "AI suggests dedicating 2 extra sessions to Homo–phones. 60% of students need reinforcement on converting mixed numbers.",
-    button: "View Lesson Plan",
+    title: "Pending Topics",
+    desc: "AI found that the Topic “6.4 Create Characters” is still pending. It is recommended to schedule one revision class to complete this topic.",
+    button: "View More",
   },
   {
-    title: "Curriculum Alignment Opportunity",
-    desc: "Connect current Algebra topics with upcoming Geometry module to improve retention. Similar approach worked well last semester.",
-    button: "Preview Materials",
+    title: "AI Suggestions for Your Monthly Herald",
+    desc: "AI identified that students have not yet completed the “Where the Story Takes Place” passage exercise. It is suggested to include this in this week’s reading practice schedule.",
+    button: "View More",
   },
   {
-    title: "Differentiated Learning Paths",
-    desc: "8 students are ready for advanced challenges while 5 need additional support. AI has prepared tailored activities for both groups.",
-    button: "Preview Materials",
+    title: "Performance Review",
+    desc: "AI observed that overall student performance in recent reading activities has slightly declined. It is recommended to conduct a short recap session to strengthen comprehension and accuracy before moving to the next unit.",
+    button: "View More",
   },
 ];
 
 const Analytics = () => {
   return (
-    <div className="analytics_main_content bg-light">
+    <div className="analytics_main_content bg-light ">
       <Row>
         <Col>
           <div className="header">
             <Row className="">
-              <Col className="col-md-12 col-lg-8">
+              <Col md={4}>
                 <div className="text-start">
-                  <h1 style={{ marginBottom: 4 }}>Analytics Overview</h1>
+                  <h3 style={{ marginBottom: 4 }}>Analytics Overview</h3>
                   <p style={{ color: "#6b6b6b" }}>
                     Manage your classes, lessons, and student progress
                   </p>
                 </div>
               </Col>
-              
-    
+              <Col md={2}></Col>
+
               <Col
-                
-                className="d-flex justify-content-end align-items-center gap-3 col-md-12 col-lg-4"
+                md={6}
+                className="d-flex justify-content-end align-items-center gap-3"
               >
                 <Dropdown>
                   <Dropdown.Toggle
@@ -199,7 +244,7 @@ const Analytics = () => {
             </Row>
           </div>
 
-          <hr />
+          <hr className="mt-0" />
 
           <Row className="m-0 mt-3 analytics-row">
             <Col md={3} sm={6} className="mb-3">
@@ -321,14 +366,14 @@ const Analytics = () => {
             <Col md={6}>
               <Card className="p-3 mb-3">
                 <Row className="d-flex justify-content-between align-items-center">
-                  <Col>
+                  <Col className="mb-4">
                     <div className="text-start">
                       <h5 className="fw-bold text-primary m-0">
                         Daily Completion
                       </h5>
                       <p
                         className="text-muted m-0"
-                        style={{ fontSize: "12px" }}
+                        style={{ fontSize: "18px" }}
                       >
                         Track your daily teaching progress
                       </p>
@@ -355,36 +400,85 @@ const Analytics = () => {
                 </Row>
 
                 <div style={{ width: "100%", height: 260 }}>
-                  <ResponsiveContainer>
-                    <BarChart data={dailyData}>
+                  <ResponsiveContainer width="100%" height={260}>
+                    <BarChart data={processedData}>
                       <CartesianGrid strokeDasharray="3 3" vertical={false} />
                       <XAxis dataKey="name" />
-                      <YAxis />
+                      <YAxis
+                      // domain={[0, 10]}
+                      />
                       <Tooltip />
-                      <Legend wrapperStyle={{ fontSize: "12px" }} />
 
                       <Bar
-                        dataKey="actual"
-                        fill=" #4a90e2"
-                        name="Actual Topics"
-                        barSize={20}
+                        dataKey="bar1"
+                        barSize={40}
+                        shape={(props) => {
+                          const { x, y, width, height, payload } = props;
+                          if (!payload.bar1Key) return null;
+                          return (
+                            <rect
+                              x={x}
+                              y={y}
+                              width={width}
+                              height={height}
+                              fill={getColor(payload.bar1Key)}
+                              rx={4}
+                            />
+                          );
+                        }}
                       />
 
                       <Bar
-                        dataKey="completed"
-                        fill="#4CAF50"
-                        name="Completed Topics"
-                        barSize={20}
+                        dataKey="bar2"
+                        barSize={40}
+                        shape={(props) => {
+                          const { x, y, width, height, payload } = props;
+                          if (!payload.bar2Key) return null;
+                          return (
+                            <rect
+                              x={x}
+                              y={y}
+                              width={width}
+                              height={height}
+                              fill={getColor(payload.bar2Key)}
+                              rx={4}
+                            />
+                          );
+                        }}
                       />
 
                       <Bar
-                        dataKey="partial"
-                        fill="#F9A825"
-                        name="Partially Completed Topics"
-                        barSize={20}
+                        dataKey="bar3"
+                        barSize={40}
+                        shape={(props) => {
+                          const { x, y, width, height, payload } = props;
+                          if (!payload.bar3Key) return null;
+                          return (
+                            <rect
+                              x={x}
+                              y={y}
+                              width={width}
+                              height={height}
+                              fill={getColor(payload.bar3Key)}
+                              rx={4}
+                            />
+                          );
+                        }}
                       />
                     </BarChart>
                   </ResponsiveContainer>
+                </div>
+                <div className="chart-legend d-flex justify-content-center">
+                  <div className="legend-item">
+                    <span className="legend-box blue"></span> Actual Topics
+                  </div>
+                  <div className="legend-item">
+                    <span className="legend-box green"></span> Completed Topics
+                  </div>
+                  <div className="legend-item">
+                    <span className="legend-box yellow"></span> Partially
+                    completed Topics
+                  </div>
                 </div>
               </Card>
             </Col>
@@ -392,14 +486,14 @@ const Analytics = () => {
             <Col md={6}>
               <Card className="p-3 mb-3">
                 <Row className="d-flex justify-content-between align-items-center">
-                  <Col>
+                  <Col className="mb-4">
                     <div className="text-start">
                       <h5 className="fw-bold text-primary m-0">
                         Weekly Completion
                       </h5>
                       <p
                         className="text-muted m-0"
-                        style={{ fontSize: "12px" }}
+                        style={{ fontSize: "18px" }}
                       >
                         Planned vs. completed lessons by week
                       </p>
@@ -427,35 +521,89 @@ const Analytics = () => {
 
                 <div style={{ width: "100%", height: 260 }}>
                   <ResponsiveContainer>
-                    <BarChart data={monthlyData}>
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                      <XAxis dataKey="name" />
-                      <YAxis />
-                      <Tooltip />
-                      <Legend wrapperStyle={{ fontSize: "12px" }} />
+                    <div style={{ width: "100%", height: 260 }}>
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={weeklyProcessed}>
+                          <CartesianGrid
+                            strokeDasharray="3 3"
+                            vertical={false}
+                          />
+                          <XAxis dataKey="name" />
+                          <YAxis />
+                          <Tooltip />
 
-                      <Bar
-                        dataKey="actual"
-                        fill="#4285F4"
-                        name="Actual Topics"
-                        barSize={20}
-                      />
+                          <Bar
+                            dataKey="bar1"
+                            barSize={40}
+                            shape={(props) => {
+                              const { x, y, width, height, payload } = props;
+                              if (!payload.bar1Key) return null;
+                              return (
+                                <rect
+                                  x={x}
+                                  y={y}
+                                  width={width}
+                                  height={height}
+                                  fill={getColor(payload.bar1Key)}
+                                  rx={4}
+                                />
+                              );
+                            }}
+                          />
 
-                      <Bar
-                        dataKey="completed"
-                        fill="#34A853"
-                        name="Completed Topics"
-                        barSize={20}
-                      />
+                          <Bar
+                            dataKey="bar2"
+                            barSize={40}
+                            shape={(props) => {
+                              const { x, y, width, height, payload } = props;
+                              if (!payload.bar2Key) return null;
+                              return (
+                                <rect
+                                  x={x}
+                                  y={y}
+                                  width={width}
+                                  height={height}
+                                  fill={getColor(payload.bar2Key)}
+                                  rx={4}
+                                />
+                              );
+                            }}
+                          />
 
-                      <Bar
-                        dataKey="partial"
-                        fill="#FBBC05"
-                        name="Partially completed Topics"
-                        barSize={20}
-                      />
-                    </BarChart>
+                          <Bar
+                            dataKey="bar3"
+                            barSize={40}
+                            shape={(props) => {
+                              const { x, y, width, height, payload } = props;
+                              if (!payload.bar3Key) return null;
+                              return (
+                                <rect
+                                  x={x}
+                                  y={y}
+                                  width={width}
+                                  height={height}
+                                  fill={getColor(payload.bar3Key)}
+                                  rx={4}
+                                />
+                              );
+                            }}
+                          />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
                   </ResponsiveContainer>
+                </div>
+                <div className="chart-legend d-flex justify-content-center">
+                  <div className="legend-item">
+                    <span className="legend-box blue"></span> Actual Topics
+                  </div>
+                  <div className="legend-item">
+                    <span className="legend-box green"></span> Completed Topics
+                  </div>
+                  <div className="legend-item">
+                    <span className="legend-box yellow"></span> Partially
+                    completed Topics
+                  </div>
                 </div>
               </Card>
             </Col>
@@ -468,17 +616,19 @@ const Analytics = () => {
                   <Row style={{ whiteSpace: "nowrap" }}>
                     <Col>
                       <div className="text-start">
-                        <h5 className="text-primary">
+                        <h5 className="fw-bold text-primary m-0">
                           {" "}
                           Monthly Curriculum Coverage
                         </h5>
-                        <p>Overall Lesson / Chapter completion percentage</p>
+                        <p className="text-muted" style={{ fontSize: "18px" }}>
+                          Overall Lesson / Chapter completion percentage
+                        </p>
                       </div>
                     </Col>
                     <Col>
                       <div className="text-end">
                         <h5 className="text-primary">48%</h5>
-                        <p>33 of 69 topics</p>
+                        <p className="text-muted">33 of 69 topics</p>
                       </div>
                     </Col>
                   </Row>
@@ -536,6 +686,9 @@ const Analytics = () => {
                     </div>
                   );
                 })}
+                <div>
+                  <span className="text-muted">Topics Covered percentage</span>
+                </div>
               </Card>
             </Col>
 
@@ -544,10 +697,10 @@ const Analytics = () => {
                 <Row>
                   <Col>
                     <div className=" text-start">
-                      <h5 className="text-primary" style={{ fontWeight: 600 }}>
-                        AI Insight
-                      </h5>
-                      <p>Personalized insights</p>
+                      <h5 className="text-primary fw-bold m-0">AI Insight</h5>
+                      <p className="text-muted" style={{ fontSize: "18px" }}>
+                        Personalized insights
+                      </p>
                     </div>
                   </Col>
                   <Col className="text-end">
@@ -556,7 +709,7 @@ const Analytics = () => {
                       src={star}
                       style={{
                         width: "40PX",
-                        height: "30px",
+                        height: "45px",
                         borderRadius: "50%",
                       }}
                     />
@@ -568,15 +721,19 @@ const Analytics = () => {
                     key={index}
                     style={{
                       borderRadius: 12,
-                      padding: 16,
-                      marginBottom: 12,
-                      border: "1px solid #1890e0ff",
+                      padding: 6,
+                      marginBottom: 7,
+                      border: '1px solid #1890e0ff'
+                      // borderBottom: "none",
+                      // borderTop: "1px solid #1890e0ff",
+                      // borderLeft: "1px solid #1890e0ff",
+                      // borderRight: "1px solid #1890e0ff",
                     }}
                   >
                     {" "}
                     <div className="text-start">
                       <h5>{item.title}</h5>
-                      <p>{item.desc}</p>
+                      <p className="text-muted">{item.desc}</p>
                     </div>
                     <div className="text-end">
                       <Button
@@ -586,6 +743,7 @@ const Analytics = () => {
                           fontSize: 13,
                           padding: "4px 12px",
                           borderRadius: 6,
+                          border: '1px solid #d6d3d3ff'
                         }}
                       >
                         {item.button}

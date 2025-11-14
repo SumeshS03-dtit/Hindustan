@@ -14,6 +14,7 @@ type OTPProps = GetProps<typeof Input.OTP>;
 
 const Login = () => {
   const [show, setShow] = useState("login");
+  const [realOtp,setRealOtp] = useState("");
   const [mobileNumber, setMobileNumber] = useState("");
   const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
@@ -42,6 +43,7 @@ const Login = () => {
 
       const data = await res.json();
       console.log("OTP:", data.sent?.otpNo);
+      setRealOtp(data.sent?.otpNo);
 
       if (data.message === "OTP sent successfully") {
         setShow("otp");
@@ -196,12 +198,12 @@ const Login = () => {
                   </Form.Group>
 
                   <div className="d-flex align-items-center gap-2">
-                    <Switch
+                    {/* <Switch
                       defaultChecked
                       onChange={onToggle}
                       className="toggle"
-                    />
-                    <p className="m-0 classRemember">Remember me</p>
+                    /> */}
+                    {/* <p className="m-0 classRemember">Remember me</p> */}
                   </div>
 
                   <Button
@@ -239,7 +241,7 @@ const Login = () => {
                       onChange={(value) => setOtp(value)}
                     />
                   </Form.Group>
-
+                  <small>Your Login OTP: {realOtp}</small>
                   <Button className="w-100 my-3 radiant-btn" onClick={handleOtpVerify}>
                     Submit
                   </Button>

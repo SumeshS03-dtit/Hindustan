@@ -2,15 +2,20 @@ import React, { useState } from "react";
 import { Row, Col, Card, Button } from "react-bootstrap";
 import "../Styles/MyClasses.css";
 import { FaBell } from "react-icons/fa6";
-import gradeIcon from "../assets/HIS/icons/GradeIcon.jpg";
+import gradeA from "../assets/HIS/images/gradeone.png";
+import gradeB from "../assets/HIS/images/gradetwo.png";
+import gradeC from "../assets/HIS/images/gradethree.png";
+import "react-calendar/dist/Calendar.css";
+import Calendar from "react-calendar";
 
 const MyClasses = () => {
   const [selectedDate, setSelectedDate] = useState(14);
+  const [value, setValue] = useState(new Date());
 
   const classes = [
-    { grade: "Grade 3A", students: 36, room: 204, topics: 54 },
-    { grade: "Grade 3B", students: 34, room: 205, topics: 54 },
-    { grade: "Grade 3C", students: 32, room: 206, topics: 54 },
+    { gradeA: "Grade 3A", students: 36, room: 204, topics: 54 },
+    { gradeB: "Grade 3B", students: 34, room: 205, topics: 54 },
+    { gradeC: "Grade 3C", students: 32, room: 206, topics: 54 },
   ];
 
   const schedule = [
@@ -32,22 +37,19 @@ const MyClasses = () => {
       topic: "All Teachers Meeting at Conference Room",
       period: "6 - Period",
     },
-  ];
-
-  const days = [
-    [29, 30, 1, 2, 3, 4, 5],
-    [6, 7, 8, 9, 10, 11, 12],
-    [13, 14, 15, 16, 17, 18, 19],
-    [20, 21, 22, 23, 24, 25, 26],
-    [27, 28, 29, 30, 31, 1, 2],
+    {
+      date: "Nov 14",
+      title: "Class – Grade 3C  ",
+      topic: "6.1 More Powerful Language",
+      period: "2 - Period",
+    },
   ];
 
   return (
     <div className="my-classes-container">
-      
       <Row className="myclassHeader">
         <Col md={6} className="text-start">
-          <h3 className="fw-bold">My Classes</h3>
+          <h3 className="fw-bold m-0">My Classes</h3>
           <p className="text-muted">Manage your classes and student progress</p>
         </Col>
 
@@ -60,8 +62,7 @@ const MyClasses = () => {
         </Col>
       </Row>
 
-     
-      <h5 className="text-primary text-start">Classes</h5>
+      <h5 className="text-primary text-start m-2">Classes</h5>
 
       <Row className="">
         {classes.map((cls, index) => (
@@ -69,24 +70,22 @@ const MyClasses = () => {
             <Card className="class-card">
               <Card.Body>
                 <Row>
-                
                   <Col md={5} className="d-flex justify-content-center">
                     <div className="grade-circle">
-                      <h5 className="text-primary m-0">{cls.grade}</h5>
+                      <img src={gradeA} alt="grade" />
                     </div>
                   </Col>
 
-                 
                   <Col md={7}>
-                    <p className="info-line">
+                    <p className="info-line d-flex justify-content-between">
                       Students:
                       <span className="fw-bold ms-5"> {cls.students}</span>
                     </p>
-                    <p className="info-line">
+                    <p className="info-line d-flex justify-content-between">
                       Room No:
                       <span className="fw-bold ms-5"> {cls.room}</span>
                     </p>
-                    <p className="info-line">
+                    <p className="info-line d-flex justify-content-between">
                       Total Topics:
                       <span className="fw-bold ms-5"> {cls.topics}</span>
                     </p>
@@ -98,99 +97,62 @@ const MyClasses = () => {
         ))}
       </Row>
 
-     
       <div className="mt-2">
         <h5 className="text-primary text-start">Schedules</h5>
         <Row>
-         
-          <Col md={8}>
-            <Card className="calendar-card">
-              <Card.Body>
-                <Row>
-                  <Col>
-                    <h6 className="text-start">Calendar</h6>
-                  </Col>
-                  <Col className="text-end">
-                    <Button variant="light">
-                      <Button size="sm" variant="light">
-                        {"<"}
-                      </Button>
-                      <span className="mx-2 fw-semibold">Nov 2025</span>
-                      <Button size="sm" variant="light">
-                        {">"}
-                      </Button>
-                    </Button>
-                  </Col>
-                </Row>
+          <Col md={7}>
+            <Card className="calendar-card p-3">
+              <Row>
+                <Col>
+                  <h6 className="text-start">Calendar</h6>
+                </Col>
+              </Row>
 
-                <table className="calendar-table">
-                  <thead>
-                    <tr style={{ borderBottom: "1px solid #c0bbbb" }}>
-                      <th>Sun</th>
-                      <th>Mon</th>
-                      <th>Tue</th>
-                      <th>Wed</th>
-                      <th>Thu</th>
-                      <th>Fri</th>
-                      <th>Sat</th>
-                    </tr>
-                  </thead>
-
-                  <tbody>
-                    {days.map((week, i) => (
-                      <tr key={i}>
-                        {week.map((day, j) => (
-                          <td
-                            key={j}
-                            className={day === selectedDate ? "active-day" : ""}
-                            onClick={() => setSelectedDate(day)}
-                          >
-                            {day}
-                          </td>
-                        ))}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </Card.Body>
+              <Calendar
+                onChange={setValue}
+                value={value}
+                className="w-100 border-0 custom-calendar"
+              />
             </Card>
           </Col>
 
-        
-          <Col md={4}>
+          <Col xs={12} md={5}>
             {schedule.map((item, idx) => (
-              <Card className="schedule-card mb-1" key={idx}>
+              <Card className="schedule-card mb-2" key={idx}>
                 <Card.Body>
-                  <Row>
-                    
-                    <Col md={2}>
-                      <div className="date-box ">
+                  <Row className="align-items-center">
+                    <Col xs={3} md={2}>
+                      <div className="date-box">
                         <h6 className="m-0 text-primary">
-                          {item.date.split(" ")[1]}
-                        </h6>
-                        <small className="text-muted text-primary">
                           {item.date.split(" ")[0]}
+                          
+                        </h6>
+                        <small className=" text-primary">
+                          {item.date.split(" ")[1]}
                         </small>
                       </div>
                     </Col>
 
-                
-                    <Col md={10}>
-                      <Row>
-                        <Col>
-                          <h6 className="m-0">{item.title}</h6>
+                    <Col xs={9} md={10}>
+                      <Row >
+                        <Col xs={12} sm={8}>
+                          <h6 className="m-0 d-flex justify-content-between">{item.title}</h6>
                         </Col>
 
-                        <Col className="text-end">
-                          <span className="period-badge text-primary">
+                        <Col
+                          xs={12}
+                          sm={4}
+                          className="text-sm-end text-start mt-1 mt-sm-0"
+                        >
+                          <span className="period-badge text-primary ">
                             {item.period}
                           </span>
                         </Col>
                       </Row>
 
                       <Row className="m-0">
-                        <Col className=" text-start">
-                          <small className="text-muted">{item.topic}</small>
+                        <Col xs={12}>
+                          <small className="text-muted d-flex justify-content-between">{item.topic}</small>
                         </Col>
                       </Row>
                     </Col>
@@ -202,7 +164,6 @@ const MyClasses = () => {
         </Row>
       </div>
 
-      
       <Card className="mt-4 p-3">
         <h6>Note</h6>
       </Card>

@@ -15,18 +15,27 @@
 
 .class-card {
     border-radius: 15px;
-    border: 1px solid #f0f0f0;
+    
 }
 
 .grade-circle {
-    width: 100px;
-    height: 100px;
-    background: #E3F2FD;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  width: 170px;            
+  height: 80px;
+  /* border-radius: 50%; */
+  /* background: #f0f0f0;      */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;        
+  /* border: 2px solid #ddd;   */
 }
+
+.grade-circle img {
+  width: 70%;               
+  height: auto;
+  object-fit: contain;
+}
+
 
 .info-line {
     margin-bottom: 4px;
@@ -34,6 +43,7 @@
 
 .calendar-card {
     border-radius: 15px;
+    
 }
 
 .calendar-table {
@@ -66,11 +76,13 @@
  background: linear-gradient(90deg, #074799, #35A6FA);
     color: white;
     border-radius: 8px;
+    width: 50px;
 }
 
 .schedule-card {
     border-radius: 15px;
     border: 1px solid #f0f0f0;
+    
 }
 
 .date-box {
@@ -93,3 +105,40 @@
     font-size: 12px;
     font-weight: bold;
 }
+
+
+
+.custom-calendar {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+
+.react-calendar__tile {
+  padding: 8px 0 !important;
+  font-size: 12px !important;
+}
+
+.react-calendar__month-view__days__day {
+  flex-basis: 14.2% !important;
+}
+
+
+.react-calendar__navigation button {
+  font-size: 14px !important;
+  padding: 6px !important;
+}
+
+
+@media (max-width: 480px) {
+  .react-calendar__tile {
+    padding: 5px 0 !important;
+    font-size: 10px !important;
+  }
+
+  .react-calendar__navigation button {
+    font-size: 12px !important;
+    padding: 4px !important;
+  }
+}
+

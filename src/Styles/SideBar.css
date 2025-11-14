@@ -6,8 +6,13 @@
   overflow-y: auto;
   transition: all 0.3s ease;
   border-radius: 30px;
- 
+  display: flex;
+  flex-direction: column;
+
   
+}
+.footer_teacher{
+ border-radius: 10px;
 }
 
 .logo {
@@ -17,8 +22,9 @@
 
 .nav-link {
   text-decoration: none;
-  margin-bottom: 10px;
-  display: block;
+    display: block;
+   padding: 0 !important; 
+  margin: 0 0 5px 0 !important;
 }
 
 .nav-item {
@@ -39,8 +45,77 @@
   transform: translateX(5px);
 }
 
+.nav-link.active .nav-item {
+  background: linear-gradient(90deg, #074799, #35A6FA);
+  color: white;
+  transform: translateX(5px);
+}
+
 .icon {
   width: 20px;
   height: 20px;
   margin-right: 12px;
+}
+
+.icon:hover{
+  color:white !important;
+}
+
+.teacher-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 2px solid #d7e7ff;
+  background: #f8fbff;
+  border-radius: 10px;
+  padding: 10px 14px;
+  width: 100%;
+  transition: 0.2s ease;
+}
+
+.teacher-box:hover {
+  background: #eaf4ff;
+}
+
+.teacher-avatar {
+  width: 45px;
+  height: 45px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+.teacher-img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #e6e6e6;
+}
+
+.teacher-details {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.teacher-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1179f0;
+  margin-bottom: 2px;
+}
+
+.teacher-subject {
+  font-size: 13px;
+  color: #6c6c6c;
+}
+
+@media (max-width: 576px) {
+  .teacher-avatar {
+    width: 40px;
+    height: 40px;
+  }
+  .teacher-name {
+    font-size: 15px;
+  }
 }

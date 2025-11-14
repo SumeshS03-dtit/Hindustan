@@ -2,9 +2,149 @@
     margin-left: 50px;
 } */
 
+
 .outline{
     border: 1px solid #ccc !important
-        
-        
+ 
+}
 
+
+.table_dailylog-wrapper {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 12px;
+  border: 1px solid #e5e5e5;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08); 
+}
+
+
+.table_dailylog {
+  width: 100%;
+  border-collapse: collapse !important;
+  overflow: hidden;
+}
+
+
+.table_dailylog th,
+.table_dailylog td,
+.table_dailylog tr {
+  border: none !important;
+  border-bottom: none !important;
+}
+
+
+.table_dailylog thead th {
+  background-color: #f9fafb;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 12px 10px;
+  border-bottom: 1px solid #ebebeb !important;
+}
+
+
+
+.table_dailylog tbody tr:last-child {
+  border-bottom: none;
+}
+
+
+.table_dailylog tbody tr:hover {
+  background-color: #f7faff;
+  transition: 0.2s ease;
+}
+.custom_ai_btn{
+    height: 40px;
+}
+.custom_line td {
+   border-bottom: 1px solid rgb(180, 179, 179) !important;
+}   
+.custom_height{
+    height: 70px;
+}
+
+.custom_bar{
+    padding: 5px;
+    border-radius: 5px;
+  background: linear-gradient(90deg, #4CAF50, #8BC34A);
+    width: 100% !important;
+    display: flex;
+}
+
+.custom-modal {
+  border-radius: 15px;
+  padding: 10px;
+}
+
+.modal-title-custom {
+  color: #1976d2;
+  font-weight: 600;
+  margin-bottom: 0;
+}
+
+.modal-subtitle-custom {
+  font-size: 13px;
+  color: #6c757d;
+}
+
+.comparison-box {
+  border: 1px solid #e2e2e2;
+  border-radius: 12px;
+  background: #fafafa;
+}
+
+.box-label {
+  font-size: 12px;
+  color: #6d6d6d;
+  margin-bottom: 2px;
+}
+
+.box-value {
+  color: #1976d2;
+  font-weight: 600;
+}
+
+.section-label {
+  font-size: 13px;
+  color: #6c6c6c;
+  margin-bottom: 2px;
+}
+
+.section-value {
+  font-weight: 600;
+  color: #070707;
+}
+
+.status-label {
+  color: #1976d2;
+  font-weight: 500;
+}
+
+.status-completed {
+  color: #28a745;
+  font-weight: 600;
+}
+
+.custom-progress {
+  height: 8px;
+  background-color: #e9ecef;
+  border-radius: 20px;
+}
+
+.progress-complete {
+  width: 100%;
+  background: linear-gradient(90deg, #4CAF50, #8BC34A);
+  border-radius: 20px;
+}
+
+.percent-text {
+  color: #1976d2;
+}
+
+.ai-btn {
+  background-color: #1976d2 !important;
+  color: #fff !important;
+  padding: 8px 18px;
+  display: flex;
+  align-items: center;
+  border-radius: 30px;
 }

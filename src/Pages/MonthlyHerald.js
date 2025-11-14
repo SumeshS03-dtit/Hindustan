@@ -8,10 +8,12 @@ import { FaBell } from "react-icons/fa6";
 import ailogo from "../assets/HIS/images/AI LOGO 3.png"
 import {getMonthlyHerald} from '../Services/monthlyherald'
 import AiSuggestionModal from "../Components/AiSuggestionModal";
+import AddMonthlyModal from "../Components/AddMonthlyModal"
 
 const MonthlyHerald = () => {
   const [search, setSearch] = useState("");
   const [showAISuggestion, setShowAISuggestion] = useState(false);
+  const [showAddMonthly, setShowAddMonthly] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
   const navigate = useNavigate();
   const [heraldData, setHeraldData] = useState([]);
@@ -23,7 +25,7 @@ const MonthlyHerald = () => {
   const fetchHeraldData = async () => {
     try {
       const data = await getMonthlyHerald();
-      // console.log("Monthlyheralddata",data);
+      console.log("Monthlyheralddata",data);
       setHeraldData(data);
     } catch (error) {
       console.log("Failed to load Monthly Herald");
@@ -111,7 +113,9 @@ const handleViewDetails = (id) => {
 
 
             <Col md={3} className="text-end">
-              <Button className=" w-100 radiantBlue">+ Upload</Button>
+              <Button className=" w-100 radiantBlue"
+               onClick={() =>setShowAddMonthly(true)}
+              >+ Upload</Button>
             </Col>
           </Row>
         </Col>
@@ -148,7 +152,7 @@ const handleViewDetails = (id) => {
                 <div className="row mt-2">
                   <div className="col-lg-4 col-6 text-start">
                     <div className="h6">Total Topics</div>
-                   <p>0/{Object.keys(card.period_plan).length}</p>
+                   <p>0/{Object.keys(card?.period_plan || {}).length}</p>
                   </div>
                   <div className="col-lg-4 col-6 text-start">
                     <div className="h6">Total Periods</div>
@@ -162,38 +166,21 @@ const handleViewDetails = (id) => {
 
                 <Row className="mt-3">
                  <div className="col-lg-8 text-start gap-3 d-flex flex-column flex-lg-row">
-<div className="row g-2">
 
-  <div className="col-lg-6 col-12">
-    <div
-      className="rounded-4 d-flex align-items-center py-1 px-3"
-      style={{
-        cursor: "pointer",
-        
-        background: "#F3A250",
-        transition: "all 0.3s ease",
-      }}
-    >
+<div className="d-flex gap-2 align-items-center flex-wrap">
+  <span className="status-badge">Upcoming</span>
+      <button
+        className="ai-suggestion-btn d-flex align-items-center gap-2"
+         onClick={() => handleAISuggestionClick(card._id)}
+      >
+        <img src={ailogo} alt="AI" className="ai-icon" />
+        <span>AI Suggestions</span>
+      </button>
+
       
-      <span className="ai-text">Completed</span>
+
+      
     </div>
-  </div>
-
-  <div className="col-lg-6 col-12">
-  <div
-    className="rounded-4 ai-btn border align-items-center border-primary d-flex gap-2 py-1 px-3"
-    onClick={() => handleAISuggestionClick(card._id)} 
-  >
-    <img
-      src={ailogo}
-      alt="AI"
-      style={{ width: "20px", height: "20px", objectFit: "contain" }}
-    />
-    <span className="ai-text">AI Suggestions</span>
-  </div>
-</div>
-
-</div>
 
  
 
@@ -256,6 +243,11 @@ const handleViewDetails = (id) => {
       id={selectedId} 
       
       ></AiSuggestionModal>
+      <AddMonthlyModal
+      show={showAddMonthly}
+      handleClose={() =>setShowAddMonthly(false)}
+      refreshData={fetchHeraldData}
+      ></AddMonthlyModal>
     </div>
     
   );

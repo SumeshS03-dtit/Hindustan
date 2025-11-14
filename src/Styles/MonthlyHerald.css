@@ -15,6 +15,11 @@
   background-color: #fff;
 }
 
+.topic-item {
+  font-weight: 600;
+  font-size: 15px;
+}
+
 .ai-text {
   white-space: nowrap;      /* keep text in one line */
   overflow: hidden;         /* hide extra text */
