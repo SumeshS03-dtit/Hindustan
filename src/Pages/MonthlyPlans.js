@@ -11,6 +11,7 @@ import { FaPencilAlt } from "react-icons/fa";
 import DailyPlans from "../Components/DailyDetailModal"
 import WeeklyPlans from "./WeeklyPlans";
 import WeeklyModal from "../Components/WeeklyModal"
+import { Row, Col} from "react-bootstrap";
 
 const MonthlyPlans = () => {
   const [monthlyDetail, setMonthlyDetail] = useState("");
@@ -18,6 +19,7 @@ const MonthlyPlans = () => {
   const [showDailyPlans,setShowDailyPlans] = useState(false);
   const [selectedPeriod, setSelectedPeriod] = useState(null);
   const [showAddWeekly, setShowAddWeekly] = useState(false);
+  const [duration, setDuration] = useState(""); // initial empty
   const { id } = useParams();
   console.log("Received ID:", id);
   const navigate = useNavigate();
@@ -25,6 +27,15 @@ const MonthlyPlans = () => {
   useEffect(() => {
     fetchSinglePlan();
   }, [id]);
+
+
+  //set the duration from the api
+  useEffect(() => {
+  if (monthlyDetail) {
+    setDuration(monthlyDetail.period_duration_minutes || "");
+  }
+}, [monthlyDetail]);
+
 
   //fetch single data by params id
   const fetchSinglePlan = async () => {
@@ -133,7 +144,8 @@ onClick={() =>handleShowAddWeeklyClick()}
       {/* Header */}
       <div className="row">
         <div className="col-6 text-start">
-          <h6 className="fw-bold text-primary">{`Period ${key.split("_")[1]}`}</h6>
+          <h6 className="fw-bold text-primary">{value.period_date}</h6>
+          <small>{`${duration} Mins`}</small>
         </div>
         <div className="col-6 text-end">
           <p className="text-muted mb-0">{value?.topics?.length} Topics</p>
@@ -157,31 +169,34 @@ onClick={() =>handleShowAddWeeklyClick()}
       </ul>
 
       {/* Buttons */}
-      <div className="row mt-3">
-        <div className="col-lg-8 text-start d-flex flex-column flex-lg-row gap-2">
-          <span className="status-badge">Upcoming</span>
+      <Row className="mt-3 align-items-center">
+  {/* LEFT 8 (Upcoming + AI Suggestions) */}
+  <Col lg={8} xs={12}>
+    <div className="left-btns d-flex align-items-center gap-2 no-wrap-desktop">
+      <button className="status-badge ellipsis-text">Upcoming</button>
 
-          <button className="ai-suggestion-btn d-flex align-items-center gap-2">
-            <img src={ailogo} alt="AI" className="ai-icon" />
-            <span>AI Suggestions</span>
-          </button>
-        </div>
+      <button
+        className="ai-suggestion-btn d-flex align-items-center gap-2"
+       
+      >
+        <img src={ailogo} alt="AI" className="ai-icon" />
+        <span className="ellipsis-text">AI Suggestions</span>
+      </button>
+    </div>
+  </Col>
 
-        <div className="col-lg-4 col-12 text-end mt-lg-0 mt-2">
-          <Button
-            size="sm"
-            style={{
-              backgroundColor: "#d9e6f8ff",
-              color: "#1b76f5ff",
-              border: "none",
-            }}
-            onClick={() => handleDailyPlanClick(key, value)}
-          >
-            <FaPencilAlt className="me-2" />
-            Edit
-          </Button>
-        </div>
-      </div>
+  {/* RIGHT 4 (View Details) */}
+  <Col lg={4} xs={12} className="text-lg-end mt-lg-0 mt-2">
+    <Button
+  size="sm"
+  className="view-details-btn"
+  onClick={() => handleDailyPlanClick(key,value)}
+>
+  <FaPencilAlt className="me-2"></FaPencilAlt>
+  View Details
+</Button>
+  </Col>
+</Row>
 
     </div>
   </div>

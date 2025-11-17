@@ -17,6 +17,7 @@ const MonthlyHerald = () => {
   const [selectedId, setSelectedId] = useState(null);
   const navigate = useNavigate();
   const [heraldData, setHeraldData] = useState([]);
+  
 
   useEffect(() => {
     fetchHeraldData();
@@ -99,15 +100,15 @@ const handleViewDetails = (id) => {
           <Row className="justify-content-end g-2">
             <Col md={4}>
   <Form.Select>
-    <option>2024 - 2025</option>
-    <option>2025 - 2026</option>
-    <option>2026 - 2027</option>
+    <option>2025</option>
+    <option>2026</option>
+    <option>2027</option>
   </Form.Select>
 </Col>
 
             <Col md={3}>
               <Form.Select>
-                <option>Complete</option>
+                <option>Upcoming</option>
               </Form.Select>
             </Col>
 
@@ -115,7 +116,7 @@ const handleViewDetails = (id) => {
             <Col md={3} className="text-end">
               <Button className=" w-100 radiantBlue"
                onClick={() =>setShowAddMonthly(true)}
-              >+ Upload</Button>
+              ><strong className="fs-5">+</strong> Add Plan</Button>
             </Col>
           </Row>
         </Col>
@@ -152,7 +153,8 @@ const handleViewDetails = (id) => {
                 <div className="row mt-2">
                   <div className="col-lg-4 col-6 text-start">
                     <div className="h6">Total Topics</div>
-                   <p>0/{Object.keys(card?.period_plan || {}).length}</p>
+                   {/* <p>0/{Object.keys(card?.period_plan || {}).length}</p> */}
+                   <p>{Object.keys(card?.period_plan || {}).length}</p>
                   </div>
                   <div className="col-lg-4 col-6 text-start">
                     <div className="h6">Total Periods</div>
@@ -164,40 +166,35 @@ const handleViewDetails = (id) => {
                   </div>
                 </div>
 
-                <Row className="mt-3">
-                 <div className="col-lg-8 text-start gap-3 d-flex flex-column flex-lg-row">
+                <Row className="mt-3 align-items-center">
+  {/* LEFT 8 (Upcoming + AI Suggestions) */}
+  <Col lg={8} xs={12}>
+    <div className="left-btns d-flex align-items-center gap-2 no-wrap-desktop">
+      <button className="status-badge ellipsis-text">Upcoming</button>
 
-<div className="d-flex gap-2 align-items-center flex-wrap">
-  <span className="status-badge">Upcoming</span>
       <button
         className="ai-suggestion-btn d-flex align-items-center gap-2"
-         onClick={() => handleAISuggestionClick(card._id)}
+        onClick={() => handleAISuggestionClick(card._id)}
       >
         <img src={ailogo} alt="AI" className="ai-icon" />
-        <span>AI Suggestions</span>
+        <span className="ellipsis-text">AI Suggestions</span>
       </button>
-
-      
-
-      
     </div>
+  </Col>
 
- 
+  {/* RIGHT 4 (View Details) */}
+  <Col lg={4} xs={12} className="text-lg-end mt-lg-0 mt-2">
+    <Button
+  size="sm"
+  className="view-details-btn"
+  onClick={() => handleViewDetails(card._id)}
+>
+  View Details
+</Button>
+  </Col>
+</Row>
 
-  
 
-</div>
-
-                  <div className="col-lg-4 col-12 text-end mt-lg-0 mt-2 ">
-                    <Button
-                      size="sm"
-                      className="radiantBlue ai-text"
-                      onClick={() => handleViewDetails(card._id)}
-                    >
-                      View Details
-                    </Button>
-                  </div>
-                </Row>
               </div>
             </Col>
           ))}

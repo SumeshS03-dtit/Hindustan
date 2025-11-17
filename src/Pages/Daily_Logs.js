@@ -7,6 +7,7 @@ import PEN from "../assets/HIS/icons/pen.png";
 import upload from "../assets/HIS/icons/upload.png";
 import { MdOutlineUpload } from "react-icons/md";
 import { AiOutlineFilePdf } from "react-icons/ai";
+import DailyPlanner from "../Components/DailyPlannerModal";
 import { FaBell } from "react-icons/fa6";
 import { FaSearch } from "react-icons/fa";
 import { IoMdAdd } from "react-icons/io";
@@ -30,12 +31,14 @@ import {
   ModalHeader,
   Card,
 } from "react-bootstrap";
+import {getDailyLogsdata} from "../Services/dailyLogs"
 
 const DailyLog = () => {
   const [search, setSearch] = useState("");
   const [showReport, setShowReport] = useState(false);
   const [showLogs, setShowLogs] = useState(false);
   const [logs, setLogs] = useState([]);
+  const [showAddDailyLogs,setShowAddDailyLogs] = useState(false);
   
   // Form state
   const [formData, setFormData] = useState({
@@ -115,200 +118,57 @@ const DailyLog = () => {
       });
   };
 
+
+
+
+
   useEffect(() => {
-    fetchLogs();
+    // fetchLogs();
+    fetdailydetail();
   }, []);
 
+const fetdailydetail = async () => {
+  try {
+    const data = await getDailyLogsdata();
+    console.log("test...............", data);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
+    // Safe check
+    const reports = data?.reports || [];
+
+    const formattedLogs = reports.map((item) => ({
+      date: item.date ? new Date(item.date).toDateString() : "",
+      lesson: item.lesson || "Unit 6: Let's Perform", // change if dynamic
+      planned_topics: item.planned_topics?.join(", ") || "",
+      completed_topics: item.completed_topics?.join(", ") || "",
+      pending_topics: item.pending_topics?.join(", ") || "",
+      studentActivity: item.studentActivity || "",
+      studentActivityFile: item.studentActivityFile ? true : false,
+      notes: item.notes || "",
+      noteFile: item.noteFile ? true : false,
+      period: item.period || "1",
+      totalStudents: item.totalStudents || "",
+      presentStudents: item.presentStudents || "",
     }));
-  };
+
+    setLogs(formattedLogs);
+  } catch (error) {
+    console.log("Failed to load daily logs", error);
+  }
+};
+
+
+
+
 
   
-  const handleFileChange = (e, fieldName) => {
-    const file = e.target.files[0];
-    setFormData(prev => ({
-      ...prev,
-      [fieldName]: file
-    }));
-  };
 
-  
-  const handleSubmitLog = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-
-    const token = localStorage.getItem("Teachertoken");
-    const teacherData = JSON.parse(localStorage.getItem("TeacherData"));
-    const teacherId = teacherData?._id;
-    const BaseUrl = process.env.REACT_APP_API_BASE_URL;
-
-    console.log("BaseUrl:", BaseUrl);
-    console.log("Creating log at:", `${BaseUrl}/dailylogs/create`);
-
-    
-    if (!formData.date || !formData.completed_topics || !formData.totalStudents || !formData.presentStudents) {
-      alert("Please fill all required fields");
-      setLoading(false);
-      return;
-    }
-
-    
-    const submitData = new FormData();
-    submitData.append('teacherId', teacherId);
-    submitData.append('date', formData.date);
-    submitData.append('period', formData.period);
-    submitData.append('subject', 'English');
-    
-   
-    const completedTopicsArray = formData.completed_topics.split(',').map(topic => topic.trim());
-    completedTopicsArray.forEach(topic => {
-      submitData.append('completed_topics', topic);
-    });
-    
-   
-    formData.planned_topics.forEach(topic => {
-      submitData.append('planned_topics', topic);
-    });
-
-    submitData.append('totalStudents', formData.totalStudents);
-    submitData.append('presentStudents', formData.presentStudents);
-    submitData.append('notes', formData.notes || '');
-    submitData.append('studentActivity', formData.studentActivity || '');
-    
-    if (formData.noteFile) {
-      submitData.append('noteFile', formData.noteFile);
-    }
-    if (formData.studentActivityFile) {
-      submitData.append('studentActivityFile', formData.studentActivityFile);
-    }
-
-    console.log("Sending data to API...");
-    for (let [key, value] of submitData.entries()) {
-      console.log(`${key}:`, value);
-    }
-
-    try {
-      const response = await fetch(`${BaseUrl}/dailylogs/create`, { // REMOVED extra /api
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: submitData,
-      });
-
-      console.log("Create response status:", response.status);
-      
-      const data = await response.json();
-      console.log("Create API Response:", data);
-
-      if (response.ok && data.report) {
-       
-        setFormData({
-          date: "",
-          period: "1",
-          planned_topics: ["6.3 More Powerful Language"],
-          completed_topics: "",
-          totalStudents: "",
-          presentStudents: "",
-          notes: "",
-          studentActivity: "",
-          noteFile: null,
-          studentActivityFile: null
-        });
-        setShowLogs(false);
-        
-      
-        fetchLogs();
-        
-        alert("Daily log created successfully!");
-      } else {
-        alert(data.message || "Failed to create daily log. Please try again.");
-      }
-    } catch (error) {
-      console.error("Error creating daily log:", error);
-      alert("Network error. Please check your connection and try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  
-  const handleSubmitLogJSON = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-
-    const token = localStorage.getItem("Teachertoken");
-    const teacherData = JSON.parse(localStorage.getItem("TeacherData"));
-    const teacherId = teacherData?._id;
-    const BaseUrl = process.env.REACT_APP_API_BASE_URL;
-
-    
-    const payload = {
-      teacherId: teacherId,
-      date: formData.date,
-      period: formData.period,
-      subject: "English",
-      planned_topics: formData.planned_topics,
-      completed_topics: formData.completed_topics.split(',').map(topic => topic.trim()),
-      totalStudents: parseInt(formData.totalStudents),
-      presentStudents: parseInt(formData.presentStudents),
-      notes: formData.notes || "",
-      studentActivity: formData.studentActivity || ""
-    };
-
-    console.log("Sending JSON payload:", payload);
-
-    try {
-      const response = await fetch(`${BaseUrl}/dailylogs/create`, { // REMOVED extra /api
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(payload),
-      });
-
-      const data = await response.json();
-      console.log("JSON API Response:", data);
-
-      if (response.ok && data.report) {
-        setFormData({
-          date: "",
-          period: "1",
-          planned_topics: ["6.3 More Powerful Language"],
-          completed_topics: "",
-          totalStudents: "",
-          presentStudents: "",
-          notes: "",
-          studentActivity: "",
-          noteFile: null,
-          studentActivityFile: null
-        });
-        setShowLogs(false);
-        fetchLogs();
-        alert("Daily log created successfully!");
-      } else {
-        alert(data.message || "Failed to create daily log");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      alert("Error creating daily log");
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const aiReport = () => {
     setShowReport(true);
   };
 
   const handleAddLog = () => {
-    setShowLogs(true);
+    setShowAddDailyLogs(true)
   };
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -399,76 +259,67 @@ const DailyLog = () => {
         </Row>
 
         <div className="flex-grow-1 table_dailylog-wrapper">
-          <Table hover responsive className="align-middle table_dailylog">
-            <thead className="table ">
-              <tr>
-                <th>Date</th>
-                <th>Lesson/chapter</th>
-                <th>Topic</th>
-                <th>Activity</th>
-                <th>Notes</th>
-                <th>No of Periods</th>
-                <th>Action</th>
-              </tr>
-            </thead>
+          <Table hover responsive className="align-middle dailylog-table">
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Lesson/Chapter</th>
+      <th>Topic</th>
+      <th>Activity</th>
+      <th>Notes</th>
+      <th>No of Periods</th>
+      <th>Action</th>
+    </tr>
+  </thead>
 
-            <tbody>
-              {filteredLogs.length > 0 ? (
-                filteredLogs.map((log, index) => (
-                  <tr key={index} className="custom_line">
-                    <td>{log.date}</td>
-                    <td>{log.lesson}</td>
-                    <td>
-                      <Col>
-                        <Row>
-                          <span>Planned: {log.planned_topics}</span>
-                        </Row>
-                        <Row>
-                          <span>Completed: {log.completed_topics}</span>
-                        </Row>
-                        <Row>
-                          <span>Pending: {log.pending_topics}</span>
-                        </Row>
-                      </Col>
-                    </td>
-                    <td>{log.studentActivity}</td>
-                    <td>{log.notes}</td>
-                    <td>{log.period}</td>
-                    <td className="custom_height">
-  <div className="d-flex justify-content-center align-items-center h-100">
-    <Button
-      className="bg-white custom_ai_btn d-flex align-items-center g-1 me-2"
-      style={{ borderRadius: "20px" }}
-      onClick={aiReport}
-    >
-      <img src={star} style={{ width: 25, height: 25 }} alt="AI Report" />
-      <span className="text-primary">
-        <strong>Ai Reports</strong>
-      </span>
-    </Button>
-    <Button
-      className="bg-white outline d-flex justify-content-center align-items-center"
-      style={{
-        borderRadius: "50%",
-        width: "40px",
-        height: "40px",
-      }}
-    >
-      <img src={PEN} style={{ width: 18, height: 18 }} alt="Edit" />
-    </Button>
+  <tbody>
+    {filteredLogs.length > 0 ? (
+      filteredLogs.map((log, index) => (
+        <tr key={index}>
+          <td>{log.date}</td>
+          <td>{log.lesson}</td>
+
+          {/* Topic: 3 line display */}
+          <td>
+            <div className="topic-wrapper text-start">
+              <div><strong>Planned:</strong> {log.planned_topics}</div>
+              <div><strong>Completed:</strong> {log.completed_topics}</div>
+              <div><strong>Pending:</strong> {log.pending_topics}</div>
+            </div>
+          </td>
+
+          <td className="truncate-text">{log.studentActivity}</td>
+          <td className="truncate-text">{log.notes}</td>
+
+          <td className="text-center fw-bold">{log.period}</td>
+
+          <td>
+           <div className="action-cell">
+  <div
+    className="ai-report-btn d-flex align-items-center gap-2 "
+    onClick={aiReport}
+  >
+    <img src={star} alt="AI Report" className="ai-icon" />
+    <span>AI Report</span>
   </div>
-</td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="7" className="text-center text-muted py-4">
-                    No daily logs found. Click "Add Log" to create one.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </Table>
+
+  <div className="edit-btn">
+    <img src={PEN} alt="Edit" />
+  </div>
+</div>
+          </td>
+        </tr>
+      ))
+    ) : (
+      <tr>
+        <td colSpan="7" className="text-center text-muted py-4">
+          No daily logs found. Click "Add Log" to create one.
+        </td>
+      </tr>
+    )}
+  </tbody>
+</Table>
+
         </div>
 
         
@@ -501,266 +352,7 @@ const DailyLog = () => {
             </Pagination>
 
            
-            <Modal
-              show={showLogs}
-              onHide={() => setShowLogs(false)}
-              centered
-              size="xl"
-              contentClassName="custom-modal"
-            >
-              <ModalHeader>
-                <div>
-                  <h5 className="modal-title-custom">Create Daily Logs</h5>
-                  <small className="modal-subtitle-custom">
-                    Record details about today's lesson
-                  </small>
-                </div>
-              </ModalHeader>
-
-              <ModalBody>
-                <form onSubmit={handleSubmitLog}>
-                  <div
-                    className="p-3 mb-3"
-                    style={{
-                      border: "1px solid #dcdcdc",
-                      borderRadius: "10px",
-                      background: "#ffffff",
-                    }}
-                  >
-                    <Row className="d-flex justify-content-between">
-                      <Col>
-                        <div className="mb-2">
-                          <span className="fw-semibold text-dark me-5">
-                            Subject :{" "}
-                          </span>
-                          <span className="text-primary ms-3" style={{ fontWeight: "bold" }}>
-                            English
-                          </span>
-                        </div>
-
-                        <div className="mb-2">
-                          <span className="fw-semibold text-dark me-2">
-                            Lesson/Chapter :
-                          </span>
-                          <span className="text-primary" style={{ fontWeight: "bold" }}>
-                            Unit 6: Let's Perform
-                          </span>
-                        </div>
-
-                        <div>
-                          <span className="fw-semibold text-dark me-4">
-                            Planned Topics :
-                          </span>
-                          <span className="text-primary" style={{ fontWeight: "bold" }}>
-                            6.3 More Powerful Language
-                          </span>
-                        </div>
-                      </Col>
-                    </Row>
-                  </div>
-
-                  <Row className="mb-3">
-                    <Col md={6}>
-                      <label className="form-label fw-semibold text-primary">
-                        Date *
-                      </label>
-                      <div className="date-input-wrapper">
-                        {/* <FaRegCalendarAlt className="date-icon" /> */}
-                        <input 
-                          type="date" 
-                          className="form-control custom-date" 
-                          name="date"
-                          value={formData.date}
-                          onChange={handleInputChange}
-                          required
-                        />
-                      </div>
-                    </Col>
-                    <Col md={6}>
-                      <label className="form-label fw-semibold text-primary">
-                        No. of Periods *
-                      </label>
-                      <input
-                        type="number"
-                        className="form-control"
-                        name="period"
-                        value={formData.period}
-                        onChange={handleInputChange}
-                        min="1"
-                        required
-                      />
-                    </Col>
-                  </Row>
-
-                  <div className="mb-3">
-                    <label className="form-label fw-semibold text-primary">
-                      Completed Topics *
-                    </label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      name="completed_topics"
-                      value={formData.completed_topics}
-                      onChange={handleInputChange}
-                      placeholder="Enter completed topics (comma separated for multiple)"
-                      required
-                    />
-                    <small className="text-muted">Separate multiple topics with commas</small>
-                  </div>
-
-                  <Row className="mb-3">
-                    <Col md={6}>
-                      <label className="form-label fw-semibold text-primary">
-                        Total Students *
-                      </label>
-                      <input
-                        type="number"
-                        className="form-control"
-                        name="totalStudents"
-                        value={formData.totalStudents}
-                        onChange={handleInputChange}
-                        placeholder="Enter the total students"
-                        min="1"
-                        required
-                      />
-                    </Col>
-
-                    <Col md={6}>
-                      <label className="form-label fw-semibold text-primary">
-                        Students Present *
-                      </label>
-                      <input
-                        type="number"
-                        className="form-control"
-                        name="presentStudents"
-                        value={formData.presentStudents}
-                        onChange={handleInputChange}
-                        placeholder="Enter the present students"
-                        min="0"
-                        max={formData.totalStudents}
-                        required
-                      />
-                    </Col>
-                  </Row>
-
-                  <Row className="mb-3">
-                    <Col md={6}>
-                      <label className="form-label fw-semibold text-primary">
-                        Notes & Observations
-                      </label>
-                      <textarea
-                        className="form-control"
-                        rows={3}
-                        name="notes"
-                        value={formData.notes}
-                        onChange={handleInputChange}
-                        placeholder="Key points, student engagement, homework assigned, etc."
-                      ></textarea>
-                    </Col>
-
-                    <Col md={6}>
-                      <label className="form-label fw-semibold text-primary">
-                        File Upload (Notes)
-                      </label>
-                      <div className="upload-box">
-                        <input
-                          type="file"
-                          className="d-none"
-                          id="noteFile"
-                          onChange={(e) => handleFileChange(e, 'noteFile')}
-                          accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
-                        />
-                        <label htmlFor="noteFile" className="w-100 h-100 d-flex align-items-center justify-content-center cursor-pointer">
-                          <div className="text-center text-secondary">
-                            <FiUpload size={20} /> Tap to upload
-                          </div>
-                        </label>
-                      </div>
-                      {formData.noteFile && (
-                        <small className="text-success">File selected: {formData.noteFile.name}</small>
-                      )}
-                    </Col>
-                  </Row>
-
-                  <Row className="mb-3">
-                    <Col md={6}>
-                      <label className="form-label fw-semibold text-primary">
-                        Students Activity
-                      </label>
-                      <textarea
-                        className="form-control"
-                        rows={3}
-                        name="studentActivity"
-                        value={formData.studentActivity}
-                        onChange={handleInputChange}
-                        placeholder="Describe student activities, engagement, etc."
-                      ></textarea>
-                    </Col>
-
-                    <Col md={6}>
-                      <label className="form-label fw-semibold text-primary">
-                        File Upload (Activity)
-                      </label>
-                      <div className="upload-box">
-                        <input
-                          type="file"
-                          className="d-none"
-                          id="studentActivityFile"
-                          onChange={(e) => handleFileChange(e, 'studentActivityFile')}
-                          accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
-                        />
-                        <label htmlFor="studentActivityFile" className="w-100 h-100 d-flex align-items-center justify-content-center cursor-pointer">
-                          <div className="text-center text-secondary">
-                            <FiUpload size={20} /> Tap to upload
-                          </div>
-                        </label>
-                      </div>
-                      {formData.studentActivityFile && (
-                        <small className="text-success">File selected: {formData.studentActivityFile.name}</small>
-                      )}
-                    </Col>
-                  </Row>
-
-                <div className="text-end">
-  <button 
-    type="button" 
-    className="btn btn-primary px-4 radiantBlue"
-    onClick={handleSubmitLogJSON}
-    disabled={loading}
-  >
-    {loading ? (
-      <>
-        <div className="spinner-border spinner-border-sm me-2" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </div>
-        Submitting...
-      </>
-    ) : (
-      <>
-        <SiTicktick className="me-2" />
-        Submit
-      </>
-    )}
-  </button>
-</div>
-                </form>
-
-                
-                {/* <div className="text-center mt-3">
-                  <small className="text-muted">
-                    If submission fails, try{' '}
-                    <button 
-                      type="button" 
-                      className="btn btn-link p-0"
-                      onClick={handleSubmitLogJSON}
-                      disabled={loading}
-                    >
-                      alternative method
-                    </button>
-                  </small>
-                </div> */}
-              </ModalBody>
-            </Modal>
+            
 
            
             <Modal
@@ -844,6 +436,11 @@ const DailyLog = () => {
                 </Button>
               </Modal.Footer>
             </Modal>
+            <DailyPlanner
+            show={showAddDailyLogs}
+            handleClose={() =>setShowAddDailyLogs(false)}
+            refreshData={fetdailydetail}
+            ></DailyPlanner>
           </div>
         </div>
       </div>

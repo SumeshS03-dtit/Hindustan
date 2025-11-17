@@ -96,7 +96,7 @@ const handleSave = async () => {
   onChange={(e) => setFormData({ ...formData, periodDuration: e.target.value })}
 />
             </div>
-            <div className="col-lg-6 col-12">
+            {/* <div className="col-lg-6 col-12">
               <label className="text-primary mt-lg-3">Duration Days</label>
               <input
   className="form-control"
@@ -105,7 +105,7 @@ const handleSave = async () => {
   value={formData.durationDays}
   onChange={(e) => setFormData({ ...formData, durationDays: e.target.value })}
 />
-            </div>
+            </div> */}
 
             <div className="col-lg-12 col-12 mt-lg-3">
               <label className="text-primary">File Upload</label>

@@ -50,6 +50,55 @@
   transform: scale(1.05);
 }
 
+/* Desktop: keep both buttons in same row */
+.no-wrap-desktop {
+  flex-wrap: nowrap;
+  overflow: hidden;
+}
+
+/* Equal space in col-8 */
+.left-btns button {
+  flex: 1 1 0;
+  min-width: 0;
+  white-space: nowrap;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Ellipsis text for small desktop width */
+.ellipsis-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  display: inline-block;
+}
+
+.view-details-btn {
+  background: linear-gradient(90deg, #0a4dbc, #1a8af7);
+  color: #fff !important;
+  border: none !important;
+  border-radius: 8px;
+  font-weight: 600;
+  padding: 6px 18px;
+  transition: 0.3s ease;
+}
+
+/* Hover effect */
+.view-details-btn:hover {
+  background: linear-gradient(90deg, #083e9d, #1475d9);
+  color: #fff !important;
+}
+
+/* Mobile: allow wrap */
+@media (max-width: 768px) {
+  .no-wrap-desktop {
+    flex-wrap: wrap;
+    overflow: visible;
+  }
+}
+
 @media (max-width: 768px) {
   .monthlyherald_main_content {
     padding: 70px 15px 15px; 
