@@ -24,11 +24,13 @@ const DailyPlanner = ({ show, handleClose, refreshData }) => {
     date: getTodayDate(),
     period: "1",
     planned_topics: ["6.3 More Powerful Language"],
+    lesson_name: "", 
     completed_topics: "",
     totalStudents: "",
     presentStudents: "",
     notes: "",
     studentActivity: "",
+    syllabus_link:"",
     noteFile: null,
     studentActivityFile: null,
   });
@@ -69,15 +71,14 @@ const DailyPlanner = ({ show, handleClose, refreshData }) => {
       console.log("Fetched Daily Log:", response);
       setDateResponse(response);
 
-      // auto-fill if report exists
-      if (response?.report) {
-        setFormData((prev) => ({
-          ...prev,
-          completed_topics: response.report.completed_topics?.join(", ") || "",
-          notes: response.report.notes || "",
-          studentActivity: response.report.studentActivity || "",
-        }));
-      }
+     // auto-fill daily log form based on fetched period
+    setFormData(prev => ({
+      ...prev,
+      lesson_name: response.data.lesson_name || prev.lesson_name,
+      planned_topics: response.data.topics?.map(t => t.topic) || prev.planned_topics,
+      syllabus_link: response.data.syllabus_link,
+    }));
+
     } catch (error) {
       console.log("Error while fetching daily logs");
     }
@@ -139,11 +140,34 @@ const DailyPlanner = ({ show, handleClose, refreshData }) => {
           {/* Box Details */}
           <div className="p-3 mb-3" style={{ border: "1px solid #dcdcdc", borderRadius: "10px", background: "#fff" }}>
             <Row>
-              <Col>
+              <Col md={8} xs={12}>
                 <div className="mb-2"><strong>Subject:</strong> <span className="text-primary fw-bold">{techsubject}</span></div>
-                <div className="mb-2"><strong>Lesson/Chapter:</strong> <span className="text-primary fw-bold">Unit 6: Let's Perform</span></div>
-                <div><strong>Planned Topic:</strong> <span className="text-primary fw-bold">6.3 More Powerful Language</span></div>
+                <div className="mb-2"><strong>Lesson/Chapter:</strong> <span className="text-primary fw-bold">{formData.lesson_name}</span></div>
+                <div><strong>Planned Topic:</strong> <span className="text-primary fw-bold">  {formData.planned_topics?.join(", ") || "—"}</span></div>
               </Col>
+              <Col md={4} xs={12} className="text-end">
+<a
+  href={formData.syllabus_link}
+  target="_blank"
+  rel="noopener noreferrer"
+  className="d-inline-block"
+  style={{
+    border: "1px dotted black",
+    borderRadius: "6px",
+    padding: "4px 10px",
+    minWidth: "60px",
+    textAlign: "center",
+    cursor: "pointer",
+    textDecoration: "none",
+    color: "black",
+    fontWeight: "500",
+  }}
+>
+  pdf
+</a>
+
+</Col>
+
             </Row>
           </div>
 
