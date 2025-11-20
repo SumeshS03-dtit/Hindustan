@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { Col, Nav, Card, Row } from "react-bootstrap";
 import { Link, useLocation } from "react-router-dom";
 import HISKLogo from "../assets/HIS/images/HIS-logo.png";
 import teacher from "../assets/HIS/new icons/teacher.jpg";
 import "../Styles/SideBar.css";
-
+import { useNavigate } from "react-router-dom";
 import analytics from "../assets/HIS/new icons/analytics.jpg";
 import dailylogs from "../assets/HIS/icons/daily-logs-icons.png";
 import lesson from "../assets/HIS/icons/monthly-herald.png";
@@ -26,6 +26,8 @@ const SideBar = () => {
   const teacherdetail = JSON.parse(localStorage.getItem("TeacherData"));
   const teachername = teacherdetail.name;
   const teachersubject = teacherdetail.subjects[0];
+  const [showLogout, setShowLogout] = useState(false);
+  const navigate = useNavigate();
 
 
   const navItems = [
@@ -54,9 +56,9 @@ const SideBar = () => {
           <Link
             to={item.path}
             key={index}
-            className={`nav-link ${
-              location.pathname === item.path ? "active" : ""
-            }`}
+           className={`nav-link ${
+      item.path && location.pathname.startsWith(item.path) ? "active" : ""
+    }`}
           >
             <div className="nav-item ">
               <img src={item.icon} className="icon" alt={item.label} />
@@ -65,14 +67,35 @@ const SideBar = () => {
           </Link>
         ))}
       </Nav>
-<div className="teacher-box mt-3">
-  <img src={teacher} alt="Teacher" className="teacher-avatar" />
+    <div style={{ position: "relative",
+      width: "100%"
+     }}>
+      <div
+        className="teacher-box mt-3"
+        onClick={() => setShowLogout(!showLogout)}
+        style={{ cursor: "pointer" }}
+      >
+        <img src={teacher} alt="Teacher" className="teacher-avatar" />
+        <div className="teacher-details">
+          <div className="teacher-name">{teachername}</div>
+          <div className="teacher-subject">{teachersubject}</div>
+        </div>
+      </div>
 
-  <div className="teacher-details">
-    <div className="teacher-name">{teachername}</div>
-    <div className="teacher-subject">{teachersubject}</div>
-  </div>
-</div>
+      {showLogout && (
+        <div className="logout-dropdown">
+          <button
+            onClick={() => {
+              localStorage.clear();
+              navigate("/");
+            }}
+            className="logout-btn"
+          >
+            Logout
+          </button>
+        </div>
+      )}
+    </div>
 
     </div>
   );

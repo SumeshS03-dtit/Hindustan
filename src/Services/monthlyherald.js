@@ -67,3 +67,55 @@ export const getMonthlyById = async (id) =>{
     }
 }
 
+
+//get monthly ai report
+export const getMonthlyAIReport = async (teacherId, month, year) =>{
+  const token = localStorage.getItem("Teachertoken");
+  try{
+    const response = await axios.post(
+      `${BaseUrl}/monthlyHerald/teacher/getMonthlyReport`,
+      {
+        teacherId,
+        month,
+        year,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+     return response.data;
+  }catch(error){
+   console.error("Error fetching Daily Logs:", error);
+   throw error;
+  }
+}
+
+
+//get report suggestion
+export const getMonthlyReportSuggestion = async (teacherId,planned_topics,pending_topics,completed_topics) => {
+  const token = localStorage.getItem("Teachertoken");
+  try{
+    const response = await axios.post(
+      `${BaseUrl}/monthlyHerald/teacher/getMonthlyReportByAi`,
+      {
+        teacherId,
+        planned_topics,
+        pending_topics,
+        completed_topics
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+
+  }catch(error){
+console.error("Error fetching Daily Logs:", error);
+   throw error;
+  }
+}
+

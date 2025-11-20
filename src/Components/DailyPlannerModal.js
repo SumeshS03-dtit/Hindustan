@@ -1,3 +1,9 @@
+import * as React from "react";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import Checkbox from "@mui/material/Checkbox";
+import ListItemText from "@mui/material/ListItemText";
+import OutlinedInput from "@mui/material/OutlinedInput";
 import { Modal } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import { FiUpload } from "react-icons/fi";
@@ -37,6 +43,7 @@ const DailyPlanner = ({ show, handleClose, refreshData }) => {
 
   const [loading, setLoading] = useState(false);
   const [dateResponse,setDateResponse] = useState(false);
+  const [noTopic, setNoTopic] = useState(false);
   const teacher = JSON.parse(localStorage.getItem("TeacherData"));
   const techsubject = teacher?.subjects[0];
 
@@ -50,39 +57,90 @@ const DailyPlanner = ({ show, handleClose, refreshData }) => {
   }, [show]);
 
   // Auto fetch when date changes manually
-  useEffect(() => {
-    if (show) {
-      fetchdetail(formData.date);
-    }
-  }, [formData.date]);
+useEffect(() => {
+  if (!show) return; // run only when modal is open
+
+  // 1️⃣ Clear completed topics first
+  setFormData(prev => ({
+    ...prev,
+    completed_topics: [""],
+  }));
+
+  // 2️⃣ Now fetch detail
+  fetchdetail(formData.date);
+
+}, [formData.date, show]); // run when date changes AND modal is open
+
+  // Reset form on modal close
+useEffect(() => {
+  if (!show) {
+    setFormData({
+      date: getTodayDate(),
+      period: "1",
+      planned_topics: ["6.3 More Powerful Language"],
+      lesson_name: "",
+      completed_topics: [""],
+      totalStudents: "",
+      presentStudents: "",
+      notes: "",
+      studentActivity: "",
+      syllabus_link: "",
+      noteFile: null,
+      studentActivityFile: null,
+    });
+  }
+}, [show]);
 
   // ---------------- Fetch detail by date ----------------
-  const fetchdetail = async (selectedDate) => {
-    const teacher = JSON.parse(localStorage.getItem("TeacherData"));
-    const teacherid = teacher?._id;
+const fetchdetail = async (selectedDate) => {
+  const teacher = JSON.parse(localStorage.getItem("TeacherData"));
+  const teacherid = teacher?._id;
 
-    try {
-      const payload = {
-        teacherId: teacherid,
-        date: formatToDDMMYYYY(selectedDate), // required format for backend
-      };
+  try {
+    const payload = {
+      teacherId: teacherid,
+      date: formatToDDMMYYYY(selectedDate),
+    };
 
-      const response = await getdetailbyDate(payload);
-      console.log("Fetched Daily Log:", response);
-      setDateResponse(response);
+    const response = await getdetailbyDate(payload);
+    console.log("Fetched Daily Log:", response);
+    setDateResponse(response);
 
-     // auto-fill daily log form based on fetched period
+    // success → auto-fill form
     setFormData(prev => ({
       ...prev,
-      lesson_name: response.data.lesson_name || prev.lesson_name,
-      planned_topics: response.data.topics?.map(t => t.topic) || prev.planned_topics,
+      lesson_name: response.data.lesson_name,
+      planned_topics: response.data.topics?.map(t => t.topic) || [],
       syllabus_link: response.data.syllabus_link,
     }));
 
-    } catch (error) {
-      console.log("Error while fetching daily logs");
+    setNoTopic(false);   // hide message
+
+  } catch (error) {
+    console.log("Error while fetching daily logs", error);
+
+    if (error?.response?.data?.message === "No period scheduled on this date") {
+      setNoTopic(true);   // show message
+      // clear previous details
+      setFormData(prev => ({
+        ...prev,
+        lesson_name: "",
+        planned_topics: [],
+        syllabus_link: "",
+      }));
     }
-  };
+  }
+};
+
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: 300,
+      width: 280,
+    },
+  },
+};
+
 
   // ---------------- Input & File Change Handlers ----------------
   const handleInputChange = (e) => {
@@ -96,6 +154,15 @@ const DailyPlanner = ({ show, handleClose, refreshData }) => {
 
   // ---------------- Submit Daily Log ----------------
   const handleSubmit = async () => {
+
+  // ⛔ Validation for completed topics
+  if (!formData.completed_topics || formData.completed_topics.length === 0) {
+    alert("Please select completed topics before submitting.");
+    return;
+  }
+
+
+
     setLoading(true);
 
     const teacher = JSON.parse(localStorage.getItem("TeacherData"));
@@ -104,16 +171,23 @@ const DailyPlanner = ({ show, handleClose, refreshData }) => {
 
     const apiForm = new FormData();
     apiForm.append("teacherId", teacherid);
-    apiForm.append("date", formatToDDMMYYYY(formData.date)); // save in DD/MM/YYYY
+    apiForm.append("date", (formData.date)); // save in DD/MM/YYYY
     apiForm.append("subject",techersubject);
     apiForm.append("period", formData.period);
-    apiForm.append("planned_topics", JSON.stringify(formData.planned_topics));
-    apiForm.append("completed_topics", JSON.stringify(formData.completed_topics.split(",")));
+  // ⬇ Send planned topics as planned_topics[0], planned_topics[1]...
+  formData.planned_topics.forEach((topic, index) => {
+    apiForm.append(`planned_topics[${index}]`, topic);
+  });
+
+  // ⬇ Send completed topics as completed_topics[0], completed_topics[1]...
+  formData.completed_topics.forEach((topic, index) => {
+    apiForm.append(`completed_topics[${index}]`, topic);
+  });
     apiForm.append("totalStudents", formData.totalStudents);
     apiForm.append("presentStudents", formData.presentStudents);
     apiForm.append("notes", formData.notes);
     apiForm.append("studentActivity", formData.studentActivity);
-    apiForm.append("syllabus_link")
+    apiForm.append("syllabus_link", formData.syllabus_link)
     if (formData.noteFile) apiForm.append("noteFile", formData.noteFile);
     if (formData.studentActivityFile) apiForm.append("studentActivityFile", formData.studentActivityFile);
 
@@ -123,6 +197,7 @@ const DailyPlanner = ({ show, handleClose, refreshData }) => {
       handleClose(); 
     } catch (err) {
       console.log("API Failed", err);
+      alert(err.response.data.error);
     }
     setLoading(false);
   };
@@ -130,9 +205,12 @@ const DailyPlanner = ({ show, handleClose, refreshData }) => {
   // ---------------- UI ----------------
   return (
     <Modal show={show} onHide={handleClose} centered size="lg" dialogClassName="monthly-modal">
-      <Modal.Header closeButton className="flex-column align-items-start">
+      <Modal.Header  closeButton>
+        <div>
         <Modal.Title className="text-primary">Create Daily Plan</Modal.Title>
         <small className="text-muted fs-6">Record details about today's lesson</small>
+        </div>
+
       </Modal.Header>
 
       <Modal.Body>
@@ -140,35 +218,54 @@ const DailyPlanner = ({ show, handleClose, refreshData }) => {
           {/* Box Details */}
           <div className="p-3 mb-3" style={{ border: "1px solid #dcdcdc", borderRadius: "10px", background: "#fff" }}>
             <Row>
-              <Col md={8} xs={12}>
-                <div className="mb-2"><strong>Subject:</strong> <span className="text-primary fw-bold">{techsubject}</span></div>
-                <div className="mb-2"><strong>Lesson/Chapter:</strong> <span className="text-primary fw-bold">{formData.lesson_name}</span></div>
-                <div><strong>Planned Topic:</strong> <span className="text-primary fw-bold">  {formData.planned_topics?.join(", ") || "—"}</span></div>
-              </Col>
-              <Col md={4} xs={12} className="text-end">
-<a
-  href={formData.syllabus_link}
-  target="_blank"
-  rel="noopener noreferrer"
-  className="d-inline-block"
-  style={{
-    border: "1px dotted black",
-    borderRadius: "6px",
-    padding: "4px 10px",
-    minWidth: "60px",
-    textAlign: "center",
-    cursor: "pointer",
-    textDecoration: "none",
-    color: "black",
-    fontWeight: "500",
-  }}
->
-  pdf
-</a>
+  <Col md={8} xs={12}>
+    {noTopic ? (
+      <div className="text-danger fw-bold mt-2">
+        ❗ No topics have been assigned for this date
+      </div>
+    ) : (
+      <>
+        <div className="mb-2">
+          <strong>Subject:</strong> <span className="text-primary fw-bold">{techsubject}</span>
+        </div>
+        <div className="mb-2">
+          <strong>Lesson/Chapter:</strong> <span className="text-primary fw-bold">{formData.lesson_name}</span>
+        </div>
+        <div>
+          <strong>Planned Topic:</strong>
+          <span className="text-primary fw-bold">
+            {formData.planned_topics?.join(", ") || "—"}
+          </span>
+        </div>
+      </>
+    )}
+  </Col>
 
-</Col>
+  {!noTopic && (
+    <Col md={4} xs={12} className="text-end">
+      <a
+        href={formData.syllabus_link}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="d-inline-block"
+        style={{
+          border: "1px dotted black",
+          borderRadius: "6px",
+          padding: "4px 10px",
+          minWidth: "60px",
+          textAlign: "center",
+          cursor: "pointer",
+          textDecoration: "none",
+          color: "black",
+          fontWeight: "500",
+        }}
+      >
+        pdf
+      </a>
+    </Col>
+  )}
+</Row>
 
-            </Row>
           </div>
 
           {/* Date + Period */}
@@ -185,8 +282,43 @@ const DailyPlanner = ({ show, handleClose, refreshData }) => {
 
           {/* Completed Topics */}
           <div className="mb-3">
-            <label className="form-label fw-semibold text-primary">Completed Topics *</label>
-            <input type="text" className="form-control" name="completed_topics" value={formData.completed_topics} onChange={handleInputChange} />
+<label className="form-label fw-semibold text-primary">Completed Topics *</label>
+
+  <Select
+  fullWidth
+  multiple
+  value={
+    Array.isArray(formData.completed_topics)
+      ? formData.completed_topics
+      : []
+  }
+  onChange={(e) => {
+    const value = e.target.value;
+    setFormData((prev) => ({
+      ...prev,
+      completed_topics: value,
+    }));
+  }}
+  input={<OutlinedInput label="Completed Topics" />}
+  renderValue={(selected) =>
+    selected.length > 0 ? selected.join(", ") : "No topic selected"
+  }
+  MenuProps={MenuProps}
+>
+  {formData.planned_topics?.length > 0 ? (
+    formData.planned_topics.map((topic, index) => (
+      <MenuItem key={index} value={topic}>
+        <Checkbox checked={formData.completed_topics?.includes(topic)} />
+        <ListItemText primary={topic} />
+      </MenuItem>
+    ))
+  ) : (
+    <MenuItem disabled>
+      <ListItemText primary="No topics available" />
+    </MenuItem>
+  )}
+</Select>
+
           </div>
 
           {/* Students Count */}

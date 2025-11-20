@@ -29,7 +29,7 @@ const AppRoutes = () => {
         <Route path="dailylog" element={<DailyLog />} />
         <Route path="monthlyherald" element={<MonthlyHerald />} />
         <Route path="myclasses" element={<MyClasses />} />
-        <Route path="monthlyplan/:id" element={<MonthlyPlans></MonthlyPlans>}></Route>
+        <Route path="monthlyherald/:id" element={<MonthlyPlans></MonthlyPlans>}></Route>
       </Route>
 
     </Routes>

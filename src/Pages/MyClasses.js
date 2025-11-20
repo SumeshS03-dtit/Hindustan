@@ -62,7 +62,7 @@ const MyClasses = () => {
         </Col>
       </Row>
 
-      <h5 className="text-primary text-start m-2">Classes</h5>
+      <h4 className="textbluecolor bold text-start mt-2">Classes</h4>
 
       <Row className="">
         {classes.map((cls, index) => (
@@ -98,7 +98,7 @@ const MyClasses = () => {
       </Row>
 
       <div className="mt-2">
-        <h5 className="text-primary text-start">Schedules</h5>
+        <h5 className="textbluecolor bold text-start">Schedules</h5>
         <Row>
           <Col md={7}>
             <Card className="calendar-card p-3">

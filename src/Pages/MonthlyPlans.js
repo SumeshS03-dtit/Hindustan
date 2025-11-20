@@ -12,13 +12,16 @@ import DailyPlans from "../Components/DailyDetailModal"
 import WeeklyPlans from "./WeeklyPlans";
 import WeeklyModal from "../Components/WeeklyModal"
 import { Row, Col} from "react-bootstrap";
+import DailyPlanSuggestion from "../Components/DailyPlanAiSuggestion"
 
 const MonthlyPlans = () => {
   const [monthlyDetail, setMonthlyDetail] = useState("");
   const [activeTab, setActiveTab] = useState("Daily");
   const [showDailyPlans,setShowDailyPlans] = useState(false);
   const [selectedPeriod, setSelectedPeriod] = useState(null);
+  const [AiData,setAiData]=useState([]);
   const [showAddWeekly, setShowAddWeekly] = useState(false);
+  const [showDailyAiSuggestion, setShowDailyAiSuggestion] = useState(false);
   const [duration, setDuration] = useState(""); // initial empty
   const { id } = useParams();
   console.log("Received ID:", id);
@@ -55,8 +58,25 @@ const handleDailyPlanClick = (periodKey, periodValue) => {
   setShowDailyPlans(true);
 };
 
-const handleShowAddWeeklyClick = () => {
+//show ai suggestion modalbox
+const handleshowaisuggestion = (data) =>{
+  setAiData(data)
+  setShowDailyAiSuggestion(true);
+}
 
+const convertToDate = (dateString) => {
+  if (!dateString) return null;
+  const [day, month, year] = dateString.split("/");
+  return new Date(year, month - 1, day);
+};
+
+
+
+
+
+
+const handleShowAddWeeklyClick = () => {
+  
   setShowAddWeekly(true);
 };
 
@@ -138,17 +158,19 @@ onClick={() =>handleShowAddWeeklyClick()}
       {activeTab === "Daily" && (
         <div className="row mt-4">
         {Object.entries(monthlyDetail?.period_plan || {}).map(([key, value], index) => (
-  <div className="col-md-4 mb-4" key={index}>
+  <div className="col-md-4 mb-4" key={index} style={{
+    position: "relative",
+  }}>
     <div className="monthlyheraldbox p-3">
 
       {/* Header */}
       <div className="row">
         <div className="col-6 text-start">
-          <h6 className="fw-bold text-primary">{value.period_date}</h6>
+          <h6 className="fw-bold textbluecolor">{value.period_date}</h6>
           <small>{`${duration} Mins`}</small>
         </div>
         <div className="col-6 text-end">
-          <p className="text-muted mb-0">{value?.topics?.length} Topics</p>
+          <span className=" period-badge text-muted mb-0">{value?.topics?.length} Topics</span>
         </div>
       </div>
 
@@ -156,44 +178,88 @@ onClick={() =>handleShowAddWeeklyClick()}
 
       {/* Lesson Name (show once) */}
       <p className="text-start text-muted mb-1" style={{ fontSize: "14px" }}>Lesson/Chapter</p>
-      <p className="text-start fw-bold text-primary">{value?.lesson_name || "Lesson not provided"}</p>
+      <p className="text-start fw-bold textbluecolor">{value?.lesson_name || "Lesson not provided"}</p>
 
       {/* Topics */}
       <p className="text-start text-muted mb-1" style={{ fontSize: "14px" }}>
   Topics to Cover:
 </p>
-      <ul className="text-start  p-0" style={{ listStyle: "none" }}>
-        {value?.topics?.map((topic, i) => (
-          <li key={i} className="topic-item">{topic?.topic}</li>
-        ))}
-      </ul>
+      {/* <ul
+  className="text-start p-0 topic-list"
+  style={{ listStyle: "none" }}
+>
+  {value?.topics?.map((topic, i) => (
+    <li key={i} className="topic-item">
+      {topic?.topic}
+    </li>
+  ))}
+</ul> */}
+<p className="topics-preview text-start">
+  {value?.topics?.map(t => t.topic).join(", ")}
+</p>
+
 
       {/* Buttons */}
       <Row className="mt-3 align-items-center">
   {/* LEFT 8 (Upcoming + AI Suggestions) */}
   <Col lg={8} xs={12}>
     <div className="left-btns d-flex align-items-center gap-2 no-wrap-desktop">
-      <button className="status-badge ellipsis-text">Upcoming</button>
+  {(() => {
+    const today = new Date();
+    const taskDate = convertToDate(value.period_date);
 
+    let status = "";
+    if (
+      taskDate.getFullYear() === today.getFullYear() &&
+      taskDate.getMonth() === today.getMonth() &&
+      taskDate.getDate() === today.getDate()
+    ) {
+      status = "Pending";        // Same day
+    } else if (taskDate > today) {
+      status = "Upcoming";       // Future date
+    } else {
+      status = "Completed";      // Past date
+    }
+
+    return (
       <button
-        className="ai-suggestion-btn d-flex align-items-center gap-2"
-       
+        className={`status-badge ellipsis-text ${
+          status === "Completed"
+            ? "completed-badge"
+            : status === "Pending"
+            ? "pending-badge"
+            : "upcoming-badge"
+        }`}
       >
-        <img src={ailogo} alt="AI" className="ai-icon" />
-        <span className="ellipsis-text">AI Suggestions</span>
+        {status}
       </button>
-    </div>
+    );
+  })()}
+
+  <button
+    className="ai-suggestion-btn d-flex align-items-center gap-2"
+    onClick={() => handleshowaisuggestion(value.topics)}
+  >
+    <img src={ailogo} alt="AI" className="ai-icon" />
+    <span className="ellipsis-text">AI Suggestions</span>
+  </button>
+</div>
+
   </Col>
 
   {/* RIGHT 4 (View Details) */}
   <Col lg={4} xs={12} className="text-lg-end mt-lg-0 mt-2">
     <Button
   size="sm"
-  className="view-details-btn"
+  style={{
+                  backgroundColor: "#d9e6f8ff",
+                  color: "#226DCD",
+                  border: "none",
+                }}
   onClick={() => handleDailyPlanClick(key,value)}
 >
   <FaPencilAlt className="me-2"></FaPencilAlt>
-  View Details
+  Edit
 </Button>
   </Col>
 </Row>
@@ -218,6 +284,11 @@ onClick={() =>handleShowAddWeeklyClick()}
 show={showAddWeekly}
 handleClose={() => setShowAddWeekly(false)}
 ></WeeklyModal>
+<DailyPlanSuggestion
+show={showDailyAiSuggestion}
+handleClose={() =>setShowDailyAiSuggestion(false)}
+aidata={AiData}
+></DailyPlanSuggestion>
       
     </div>
   );

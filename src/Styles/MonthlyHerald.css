@@ -8,17 +8,98 @@
   background-color: #f8f9fa;
   overflow-x: hidden;
 }
+.textbluecolor{
+  color: #226DCD;
+}
 
-.monthlyheraldbox{
+.monthlyheraldboxone{
   border: 1px solid #e0e0e0;
   border-radius: 10px;
-  background-color: #fff;
+  background: #fff;
+}
+
+
+.monthlyheraldbox {
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  background: #fff;
+  transition: 0.35s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.edit-hover-icon {
+  position: absolute;
+  top: -8px;
+  right: -5px;
+  font-size: 18px;
+  color: #226DCD;
+  cursor: pointer;
+  opacity: 0;              /* hidden initially */
+  transition: opacity 0.3s ease, transform 0.2s;
+}
+
+.monthlyheraldboxone:hover .edit-hover-icon {
+  opacity: 1;              /* visible on hover */
+  transform: scale(1.1);   /* small effect */
+}
+
+
+
+/* 🔥 Hover effect — grows WITHOUT pushing nearby boxes */
+.monthlyheraldbox:hover {
+  transform: scale(1.08);        /* zoom like your reference video */
+  position: absolute;            /* takes out from layout */
+  width: 100%;                   /* keep same width */
+  z-index: 20;                   /* appears on top of other boxes */
+  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+  margin-top: 5px;             /* move upward without shifting layout */
+}
+
+/* Title + Topic preview normal */
+.topics-preview {
+  max-height: 24px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  transition: 0.3s ease;
+}
+
+/* Show full topics only when hovered */
+.monthlyheraldbox:hover .topics-preview {
+  white-space: normal;
+  max-height: 300px;
+}
+
+
+
+
+
+/* .topic-list::after {
+  content: "...";
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: white;
+  padding-left: 4px;
+  display: none;
+}
+
+
+.topic-list.overflow::after {
+  display: block;
+}
+
+
+.topic-list:hover {
+  max-height: none;
+  overflow: visible;
 }
 
 .topic-item {
-  font-weight: 600;
-  font-size: 15px;
-}
+  white-space: nowrap;
+} */
+
 
 .ai-text {
   white-space: nowrap;      /* keep text in one line */
@@ -69,10 +150,19 @@
 /* Ellipsis text for small desktop width */
 .ellipsis-text {
   white-space: nowrap;
-  overflow: hidden;
+  overflow: hidden; 
   text-overflow: ellipsis;
   max-width: 100%;
   display: inline-block;
+  border: none !important;
+}
+
+.ai-ellipsis-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+  max-width: 100%;
 }
 
 .view-details-btn {
@@ -89,6 +179,53 @@
 .view-details-btn:hover {
   background: linear-gradient(90deg, #083e9d, #1475d9);
   color: #fff !important;
+}
+
+.gap-card {
+  border: 2px solid #e6b800; /* Yellow solid border */
+  border-radius: 6px;
+  padding: 15px;
+  background: #fffce6; /* optional light yellow background */
+}
+.strenght-card{
+border: 2px solid #2ea043;
+background: #eaffea;
+  border-radius: 6px;
+  padding: 15px;
+ 
+}
+
+.recommendations-card{
+border: 2px solid #1976d2;
+background: #e6f2ff;
+  border-radius: 6px;
+  padding: 15px;
+ 
+}
+
+.assessment_readiness{
+border: 2px solid #ff7a00;
+background: #fff2e6;
+  border-radius: 6px;
+  padding: 15px;
+ 
+}
+.dominant_teaching_modes{
+ border: 2px solid #8e44ad;
+background: #f7e9ff;
+  border-radius: 6px;
+  padding: 15px;
+}
+
+.gap-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.gap-list li {
+  font-size: 16px;
+  margin-bottom: 6px;
 }
 
 /* Mobile: allow wrap */

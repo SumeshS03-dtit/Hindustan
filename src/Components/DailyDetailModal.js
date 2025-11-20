@@ -11,9 +11,13 @@ const AiSuggestionModal = ({ show, handleClose, period, data}) => {
 
   return (
     <Modal show={show} onHide={handleClose} centered>
-      <Modal.Header closeButton className="flex-column align-items-start">
-        <Modal.Title>Edit Lesson Plan</Modal.Title>
+      <Modal.Header closeButton >
+        <div>
+
+                  <Modal.Title className="text-primary">Edit Lesson Plan</Modal.Title>
         <small className="text-muted">Create a lesson plan for an upcoming class</small>
+        </div>
+
       </Modal.Header>
 
       <Modal.Body>

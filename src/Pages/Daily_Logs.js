@@ -17,6 +17,7 @@ import { FaRegFilePdf } from "react-icons/fa";
 import { FaRegCalendarAlt } from "react-icons/fa";
 import { FiUpload } from "react-icons/fi";
 import { SiTicktick } from "react-icons/si";
+import Dailysuggestions from "../Components/Dailysuggestions";
 import {
   Row,
   Col,
@@ -55,6 +56,7 @@ const DailyLog = () => {
   });
 
   const [loading, setLoading] = useState(false);
+  const [dailylogId,setDailylogId] = useState("");
 
   // Fetch logs for table - FIXED URL
   const fetchLogs = () => {
@@ -136,6 +138,7 @@ const fetdailydetail = async () => {
     const reports = data?.reports || [];
 
     const formattedLogs = reports.map((item) => ({
+      _id: item._id,   
       date: item.date ? new Date(item.date).toDateString() : "",
       lesson: item.lesson || "Unit 6: Let's Perform", // change if dynamic
       planned_topics: item.planned_topics?.join(", ") || "",
@@ -163,7 +166,9 @@ const fetdailydetail = async () => {
   
 
 
-  const aiReport = () => {
+  const aiReport = (id) => {
+    console.log("Clicked ID:", id);
+    setDailylogId(id);
     setShowReport(true);
   };
 
@@ -220,7 +225,7 @@ const fetdailydetail = async () => {
 
         <Row className="mb-3 d-flex align-items-center">
           <Col md={8}>
-            <h4 className="text-start bold text-primary">
+            <h4 className="text-start bold textbluecolor">
               Daily Teaching Logs
             </h4>
           </Col>
@@ -297,7 +302,7 @@ const fetdailydetail = async () => {
            <div className="action-cell">
   <div
     className="ai-report-btn d-flex align-items-center gap-2 "
-    onClick={aiReport}
+    onClick={() =>aiReport(log._id)}
   >
     <img src={star} alt="AI Report" className="ai-icon" />
     <span>AI Report</span>
@@ -355,92 +360,18 @@ const fetdailydetail = async () => {
             
 
            
-            <Modal
-              show={showReport}
-              onHide={() => setShowReport(false)}
-              centered
-              contentClassName="custom-modal"
-            >
-              <Modal.Header
-                className="border-0 pb-0  d-flex justify-content-between"
-                
-              >
-                <div>
-                  <h5 className="modal-title-custom">
-                    Lesson Topic Vs Monthly Herald
-                  </h5>
-                  <small className="modal-subtitle-custom">AI Comparison</small>
-                </div>
-                <div className="radiantBlue">
-                  <BsStars />
-                </div>
-              </Modal.Header>
-
-              <Modal.Body className="pt-2">
-                <Row className="comparison-box mx-1 p-3">
-                  <Col md={4} className="text-center">
-                    <p className="box-label">Scheduled Date</p>
-                    <h6 className="box-value">Nov 05, 2025</h6>
-                  </Col>
-                  <Col md={4} className="text-center">
-                    <p className="box-label">Completed Date</p>
-                    <h6 className="box-value">Nov 05, 2025</h6>
-                  </Col>
-                  <Col md={4} className="text-center">
-                    <p className="box-label">Topics to Duration</p>
-                    <h6 className="box-value">45min</h6>
-                  </Col>
-                </Row>
-
-                <div className="mt-3">
-                  <p className="section-label">Unit</p>
-                  <h5 className="section-value">Unit 6 : Let’s Perform</h5>
-                </div>
-
-                <div className="mt-2">
-                  <p className="section-label">Topic</p>
-                  <h5 className="section-value">6.3 More Powerful Language</h5>
-                </div>
-
-                <div className="d-flex justify-content-between align-items-center mt-3">
-                  <span className="status-label">Status</span>
-                  <span className="status-completed">Completed</span>
-                </div>
-
-                <div className="progress custom-progress mt-1">
-                  <div className="progress-bar progress-complete"></div>
-                </div>
-                <div className="text-end">
-                  <strong className="percent-text">100%</strong>
-                </div>
-
-                <div className="mt-3">
-                  <p className="section-label">Suggestions</p>
-                  <h5 className="section-value">Your completed all topics</h5>
-                </div>
-
-                <div className="mt-3">
-                  <p className="section-label">Motivations</p>
-                  <h5 className="section-value">Your completed all topics</h5>
-                </div>
-              </Modal.Body>
-
-              <Modal.Footer className="border-0 pt-0">
-                <Button className="ai-btn">
-                  <img
-                    src={dtit}
-                    className="me-2 radiantBlue"
-                    style={{ width: 25, height: 25, borderRadius: "50%" }}
-                  />
-                  AI Chat
-                </Button>
-              </Modal.Footer>
-            </Modal>
+           
             <DailyPlanner
             show={showAddDailyLogs}
             handleClose={() =>setShowAddDailyLogs(false)}
             refreshData={fetdailydetail}
             ></DailyPlanner>
+            <Dailysuggestions
+            show={showReport}
+            handleClose={() =>setShowReport(false)}
+            id={dailylogId}
+            ></Dailysuggestions>
+            {/* const [showReport, setShowReport] = useState(false); */}
           </div>
         </div>
       </div>

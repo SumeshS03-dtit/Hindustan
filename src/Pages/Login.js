@@ -15,78 +15,99 @@ type OTPProps = GetProps<typeof Input.OTP>;
 const Login = () => {
   const [show, setShow] = useState("login");
   const [realOtp,setRealOtp] = useState("");
+  const [verifying, setVerifying] = useState(false);
   const [mobileNumber, setMobileNumber] = useState("");
   const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
+  const [sending, setSending] = useState(false);
+
 
   const navigate = useNavigate();
   const baseurl = process.env.REACT_APP_API_BASE_URL;
 
-  const handleMobileSubmit = async () => {
-    if (mobileNumber.length !== 10) {
-      setError("Please enter a valid 10-digit mobile number");
-      return;
+const handleMobileSubmit = async () => {
+  if (mobileNumber.length !== 10) {
+    setError("Please enter a valid 10-digit mobile number");
+    return;
+  }
+
+  setError("");
+  setSending(true); // 🔥 start loading
+
+  try {
+    const res = await fetch(`${baseurl}/teacher/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ mobile: mobileNumber }),
+    });
+
+    const data = await res.json();
+    console.log("OTP:", data.sent?.otpNo);
+    setRealOtp(data.sent?.otpNo);
+
+    if (data.message === "OTP sent successfully") {
+      setShow("otp");
+    } else if (data.message === "Teacher not found") {
+      alert(data.message);
+      setShow("login");
+      
+    } else {
+      setError("Something went wrong");
     }
+  } catch (err) {
+    console.log(err);
+    setError("Failed to send OTP");
+  } finally {
+    setSending(false);  // ⬅ stop loading
+  }
+};
 
-    setError("");
 
-    try {
-      const res = await fetch(`${baseurl}/teacher/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          mobile: mobileNumber,
-        }),
-      });
 
-      const data = await res.json();
-      console.log("OTP:", data.sent?.otpNo);
-      setRealOtp(data.sent?.otpNo);
+const handleOtpVerify = async () => {
+  if (otp.length !== 6) return; // prevent request if OTP not full
 
-      if (data.message === "OTP sent successfully") {
-        setShow("otp");
-      } else {
-        setError("Something went wrong");
-      }
-    } catch (err) {
-      console.log(err);
-      setError("Failed to send OTP");
+  setVerifying(true); // 🔥 start loading
+
+  try {
+    const res = await fetch(`${baseurl}/teacher/verify-otp`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        mobile: mobileNumber,
+        otp: otp,
+      }),
+    });
+
+    const data = await res.json();
+    console.log("Teacher Data:", data.data);
+
+    if (data.message === "Login successful") {
+      localStorage.setItem("Teachertoken", data.token);
+      localStorage.setItem("TeacherData", JSON.stringify(data.data));
+      navigate("/analytics");
+    } 
+    else if (data.message === "Invalid OTP") {
+      setShow("otp");
+      alert("Invalid OTP");
+    } 
+    else if (data.message === "OTP expired"){
+      alert("OTP expired");
+      setShow("login");
+      setOtp("")
     }
-  };
-
-  const handleOtpVerify = async () => {
-    try {
-      const res = await fetch(`${baseurl}/teacher/verify-otp`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          mobile: mobileNumber,
-          otp: otp,
-        }),
-      });
-
-      const data = await res.json();
-      console.log("Teacher Data:", data.data);
-
-      if (data.message === "Login successful") {
-          // Save token
-        localStorage.setItem("Teachertoken", data.token);
-
-          // Save teacher details
-        localStorage.setItem("TeacherData", JSON.stringify(data.data));
-
-        navigate("/analytics");
-      } else {
-        alert("Invalid OTP");
-      }
-    } catch (err) {
+    else {
       alert("Invalid OTP");
     }
-  };
+  } catch (err) {
+    alert("Invalid OTP");
+  } finally {
+    setVerifying(false); // ⬅ Stop loader
+  }
+};
+
 
   const onToggle = (checked) => {
     console.log(`switch to ${checked}`);
@@ -155,97 +176,85 @@ const Login = () => {
               </div>
 
               {show === "login" && (
-                <Form className="text-center">
-                  <h1 className="custom_bold">Welcome to HIS</h1>
-                  <p className="custom_bold">
-                    Enter Your Mobile Number to receive
-                  </p>
-                  <p className="custom_bold">One Time Passcode (OTP)</p>
+                <Form className="text-center" onSubmit={(e) => { e.preventDefault(); handleMobileSubmit(); }}>
+  <h1 className="custom_bold">Welcome to HIS</h1>
+  <p className="custom_bold">Enter Your Mobile Number to receive</p>
+  <p className="custom_bold">One Time Passcode (OTP)</p>
 
-                  <Form.Group className="my-3">
-                    <div className="input-group">
-                      <span
-                        className="input-group-text"
-                        style={{ background: "white", borderRight: "none" }}
-                      >
-                        <img
-                          src={mobile}
-                          style={{ width: "20px" }}
-                          alt="mobile-icon"
-                        />
-                      </span>
+  <Form.Group className="my-3">
+    <div className="input-group">
+      <span className="input-group-text" style={{ background: "white", borderRight: "none" }}>
+        <img src={mobile} style={{ width: "20px" }} alt="mobile-icon" />
+      </span>
 
-                      <Form.Control
-                        type="tel"
-                        inputMode="numeric"
-                        placeholder="Enter Your Mobile Number"
-                        style={{ borderLeft: "none" }}
-                        value={mobileNumber}
-                        onChange={(e) => setMobileNumber(e.target.value)}
-                      />
-                    </div>
-                    {error && (
-                      <p
-                        style={{
-                          color: "red",
-                          fontSize: "14px",
-                          marginTop: "5px",
-                        }}
-                      >
-                        {error}
-                      </p>
-                    )}
-                  </Form.Group>
+      <Form.Control
+        type="tel"
+        inputMode="numeric"
+        placeholder="Enter Your Mobile Number"
+        style={{ borderLeft: "none" }}
+        value={mobileNumber}
+        onChange={(e) => setMobileNumber(e.target.value)}
+        maxLength={10}    // ⬅ prevents entering more than 10 digits
+      />
+    </div>
 
-                  <div className="d-flex align-items-center gap-2">
-                    {/* <Switch
-                      defaultChecked
-                      onChange={onToggle}
-                      className="toggle"
-                    /> */}
-                    {/* <p className="m-0 classRemember">Remember me</p> */}
-                  </div>
+    {error && (
+      <p style={{ color: "red", fontSize: "14px", marginTop: "5px" }}>{error}</p>
+    )}
+  </Form.Group>
 
-                  <Button
-                    className="w-100 my-2 radiant-btn"
-                    onClick={handleMobileSubmit}
-                  >
-                    Send OTP
-                  </Button>
+  {/* Send OTP button — disabled until 10 digits */}
+  <Button
+  className="w-100 my-2 radiant-btn"
+  onClick={handleMobileSubmit}
+  disabled={mobileNumber.length !== 10 || sending}  // prevent double click
+>
+  {sending ? "Sending..." : "Send OTP"}  {/* 🔥 change text */}
+</Button>
 
-                  <p className="mt-2 custom_bold">
-                    Already have an account?
-                    <span
-                      className="custom_bold"
-                      style={{ color: "#88ce07ff", cursor: "pointer" }}
-                    >
-                      {" "}
-                      Sign Up
-                    </span>
-                  </p>
-                </Form>
+  <p className="mt-2 custom_bold">
+    Already have an account?
+    <span className="custom_bold" style={{ color: "#88ce07ff", cursor: "pointer" }}>
+      {" "}Sign Up
+    </span>
+  </p>
+</Form>
+
               )}
 
               {show === "otp" && (
-                <Form className="text-center">
-                  <h1 className="custom_bold">Enter Code</h1>
-                  <p className="custom_bold">{`We send a code to ${maskMobile(
-                    mobileNumber
-                  )}`}</p>
+                <Form
+  className="text-center"
+  onSubmit={(e) => {
+    e.preventDefault();
+    handleOtpVerify();
+  }}
+>
+  <h1 className="custom_bold">Enter Code</h1>
+  <p className="custom_bold">{`We send a code to ${maskMobile(mobileNumber)}`}</p>
 
-                  <Form.Group className="my-3">
-                    <Input.OTP
-                      length={6}
-                      formatter={(str) => str.toUpperCase()}
-                      {...sharedProps}
-                      onChange={(value) => setOtp(value)}
-                    />
-                  </Form.Group>
-                  <small>Your Login OTP: {realOtp}</small>
-                  <Button className="w-100 my-3 radiant-btn" onClick={handleOtpVerify}>
-                    Submit
-                  </Button>
-                </Form>
+  <Form.Group className="my-3">
+    <Input.OTP
+      length={6}
+      formatter={(str) => str.toUpperCase()}
+      {...sharedProps}
+      value={otp}
+      onChange={(value) => setOtp(value)}
+    />
+  </Form.Group>
+
+  <small>Your Login OTP: <span className="text-danger">{realOtp}</span></small>
+
+ <Button
+  className="w-100 my-3 radiant-btn"
+  onClick={handleOtpVerify}
+  disabled={otp.length !== 6 || verifying}  // disable until OTP typed & not verifying
+>
+  {verifying ? "Verifying..." : "Submit"}  {/* 🔥 change text */}
+</Button>
+
+</Form>
+
               )}
             </Card>
           </div>
